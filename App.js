@@ -18,17 +18,14 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { setUser } from "../redux/slice/userSlice";
+import { setUser } from "./src/component/redux/slice/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { get, ref, update, child } from "firebase/database";
-import { db } from "../../firebaseConfig.js";
-import {
-  GOOGLE_CLIENT_ID,
-  ANDROID_GOOGLE_CLIENT_ID,
-} from "react-native-dotenv";
+import { db } from "./firebaseConfig.js";
+
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
-import { GetHash } from "../util/Functions";
+import { GetHash } from "./src/util/Functions";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -41,8 +38,7 @@ export default function Login({ navigation }) {
   const dispatch = useDispatch();
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    expoClientId: GOOGLE_CLIENT_ID,
-    androidClientId: ANDROID_GOOGLE_CLIENT_ID,
+    clientId: '12711112780-emgc8pm1tpl4gkrpt041akva9t1f4d2p.apps.googleusercontent.com',
   });
 
   const openGoogleLogin = () => {
@@ -50,6 +46,7 @@ export default function Login({ navigation }) {
   };
 
   const auth = getAuth();
+  //const user = auth.currentUser;로 현재 접속한 사용자의 프로필 정보 가져올 수 있다.
   const dbRef = ref(db);
 
   useEffect(() => {
@@ -61,9 +58,9 @@ export default function Login({ navigation }) {
     }
   }, [response]);
 
-  const setUserInfo = (uid, displayName, userMovies = []) => {
+  const setUserInfo = (uid, displayName, userDiets = []) => {
     const updates = {};
-    updates["/users/" + uid] = { displayName, uid, userMovies };
+    updates["/users/" + uid] = { displayName, uid, userDiets };
     update(dbRef, updates);
   };
 
@@ -287,3 +284,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000",
   },
 });
+
+//구글 관련
+//프로젝트 ID: crack-producer-383708입니다.
+// .../auth/userinfo.email	기본 Google 계정의 이메일 주소 확인
+// .../auth/userinfo.profile	개인정보(공개로 설정한 개인정보 포함) 보기
+// openid	Google에서 내 개인 정보를 나와 연결
