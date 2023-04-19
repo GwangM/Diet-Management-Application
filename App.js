@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; //redux로 바꾸는 방향으로, react-native는 재설치해야 --save --legacy-peer-deps
 import {
   StyleSheet,
   Text,
@@ -18,8 +18,8 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { setUser } from "./src/component/redux/slice/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+// import { setUser } from "./src/component/redux/slice/userSlice";
+// import { useDispatch, useSelector } from "react-redux";
 import { get, ref, update, child } from "firebase/database";
 import { db } from "./firebaseConfig.js";
 
@@ -35,7 +35,7 @@ export default function Login({ navigation }) {
   const [isEnter, setIsEnter] = useState(false);
   const [isWarning, setIsWarning] = useState(false);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: '12711112780-emgc8pm1tpl4gkrpt041akva9t1f4d2p.apps.googleusercontent.com',
@@ -65,16 +65,16 @@ export default function Login({ navigation }) {
   };
 
   const setUserState = (uid, email, displayName, accessToken, loginType) => {
-    dispatch(
-      setUser({
-        uid,
-        email,
-        name: displayName,
-        accessToken,
-        isLogin: true,
-        loginType,
-      })
-    );
+    // dispatch(
+    //   setUser({
+    //     uid,
+    //     email,
+    //     name: displayName,
+    //     accessToken,
+    //     isLogin: true,
+    //     loginType,
+    //   })
+    // );
   };
 
   onAuthStateChanged(auth, async (user) => {

@@ -2,17 +2,6 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 import "firebase/compat/storage";
 
-import {
-  API_KEY,
-  AUTH_DOMAIN,
-  PROJECT_ID,
-  STORAGE_BUCKET,
-  MESSAGING_SENDER_ID,
-  APP_ID,
-  MEASUREMENT_ID,
-  DATABASE_URL,
-} from "react-native-dotenv";
-
 const firebaseConfig = {
   apiKey: "AIzaSyAUcUvTZSzQSItvgSh2YJNRDysUL34eMTA",
   authDomain: "diet-management-application.firebaseapp.com",
