@@ -28,6 +28,98 @@ import * as WebBrowser from "expo-web-browser";
 import { GetHash } from "./src/util/Functions";
 
 WebBrowser.maybeCompleteAuthSession();
+//
+import React, { useState } from "react";  
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";  
+import { AuthSession } from "expo";  
+import axios from "axios";
+
+//  
+const NV\_APP\_ID = "YOUR\_CLIENT\_ID";  
+const NV\_APP\_SECRET = "YOUR\_CLIENT\_PW";  
+const STATE\_STRING = "YOUR\_SECRET\_STRING";
+
+const styles = StyleSheet.create({  
+container: {  
+flex: 1,  
+backgroundColor: "#fff",  
+alignItems: "center",  
+justifyContent: "center"  
+}  
+});
+
+export default function App() {  
+//useState(), token/code/user  
+const \[token, setToken\] = useState();  
+const \[code, setCode\] = useState();  
+const \[user, setUser\] = useState();
+
+
+//authsession
+
+
+async function handlePressAsync() {  
+let redirectUrl = AuthSession.getRedirectUrl();  
+console.log(redirectUrl);  
+console.log(encodeURIComponent(redirectUrl));
+
+
+const result = await AuthSession.startAsync({
+  authUrl: `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NV_APP_ID}&redirect_uri=${encodeURIComponent(
+    redirectUrl
+  )}&state=${STATE_STRING}`
+});
+
+console.log("result", result);
+
+setCode(result.code);
+
+handleGetAccess();
+
+
+}
+
+
+//http data request
+
+
+async function handleGetAccess() {  
+const {  
+data: { access\_token }  
+} = await axios.get(`https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=${NV_APP_ID} &client_secret=${NV_APP_SECRET} &code=${code}&state=${STATE_STRING}`);
+
+
+const config = {
+  headers: {
+    Authorization: `Bearer ${access_token}`
+  }
+};
+
+setToken(data.access_token);
+
+const { data } = await axios.get(
+  "https://openapi.naver.com/v1/nid/me",
+  config
+);
+console.log(data);
+setUser(data);
+
+
+}
+
+//TEXT press -> handlePressAsync()  
+return (
+
+//네이버 아이디로 시작하기
+//TEXT press -> handlePressAsync()
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handlePressAsync}>
+        <Text>네이버 아이디로 시작하기</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
