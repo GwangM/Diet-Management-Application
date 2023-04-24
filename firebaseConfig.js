@@ -10,7 +10,7 @@ const firebaseConfig = {
   messagingSenderId: "668042191983",
   appId: "1:668042191983:web:63b9517700ac64d6d1d99a",
   measurementId: "G-R4WSQ92Q42",
-  databaseURL: process.env.DATABASE_URL,
+  databaseURL: "https://diet-management-application-default-rtdb.firebaseio.com/",
 };
 
 // if (!firebase.apps.length) {
