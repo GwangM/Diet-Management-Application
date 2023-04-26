@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; //redux로 바꾸는 방향으로, react-native는 재설치해야 --save --legacy-peer-deps
+import React, { useState, useEffect } from "react"; //--save --legacy-peer-deps
 import {
   StyleSheet,
   Text,
@@ -31,7 +31,7 @@ import logo from "../../../assets/logo1.png";
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function Login() {
+export default function Login(navigation) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEnter, setIsEnter] = useState(false);
@@ -56,20 +56,30 @@ export default function Login() {
       setIsEnter(true);
       const { id_token } = response.params;
     
+      
+
+      const credential = GoogleAuthProvider.credential(id_token);
+      signInWithCredential(auth, credential);
+
       fetch("https://f854-2001-e60-87e0-f901-1cf5-308a-dbc1-4558.ngrok-free.app/oauth2/google?id_token="+id_token, {
       method: "GET",
       headers: { 
           }, 
           })
-
-      const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential);
+        //   .then(function (response) {
+        //     if (response.ok) {
+        //         return response.text();
+        //     } else {
+        //         alert('오류');
+        //     }
+        // })
+      
     }
   }, [response]);
 
-  const setUserInfo = (uid, displayName, userDiets = []) => {
+  const setUserInfo = (uid, displayName) => {
     const updates = {};
-    updates["/users/" + uid] = { displayName, uid, userDiets };
+    updates["/users/" + uid] = { displayName, uid};
     update(dbRef, updates);
   };
 
@@ -152,6 +162,7 @@ export default function Login() {
                 disabled={!request}
                 onPress={() => {
                   openGoogleLogin();
+                  navigation.navigate("CalendarView");
                 }}
               >
                 <Text style={[styles.buttonText, styles.googleButtonText]}>

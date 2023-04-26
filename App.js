@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { store } from "./src/components/redux/store/store";
 import { Provider } from "react-redux";
 import * as SplashScreen from "expo-splash-screen";
-import Login from "./src/components/screens/Login";
+import Navigation from "./Navigation";
 const queryClient = new QueryClient();
 
 export default function App() {
@@ -25,7 +25,7 @@ export default function App() {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <View style={styles.statusPadding} />
-        <Login />
+        <Navigation/>
         <StatusBar />
       </QueryClientProvider>
     </Provider>
