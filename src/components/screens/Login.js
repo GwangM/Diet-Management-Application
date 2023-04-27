@@ -31,7 +31,7 @@ import logo from "../../../assets/logo1.png";
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function Login(navigation) {
+export default function Login({navigation}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEnter, setIsEnter] = useState(false);

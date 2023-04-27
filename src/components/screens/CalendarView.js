@@ -2,7 +2,7 @@ import React from "react";
 import { Calendar } from "react-native-calendars";
 import { StyleSheet } from "react-native";
 
-function CalendarView(navigation) {
+function CalendarView({navigation}) {
   return (
     <Calendar style={styles.calendar} />
   );
