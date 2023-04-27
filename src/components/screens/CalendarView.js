@@ -3,8 +3,21 @@ import { Calendar } from "react-native-calendars";
 import { StyleSheet } from "react-native";
 
 function CalendarView({navigation}) {
+  
   return (
-    <Calendar style={styles.calendar} />
+    <Calendar 
+      style={styles.calendar} 
+      theme={{
+        todayBackgroundColor: 'blue',
+        arrowColor: 'blue',
+        dotColor: 'green',
+        todayTextColor: 'white',
+      }}
+      onDayPress={(day) => {
+        //day.dateString
+        navigation.navigate("DailyList");
+      }}
+      />
   );
 }
 
