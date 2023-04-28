@@ -27,7 +27,7 @@ import { db } from "../../../firebaseConfig.js";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import { GetHash } from "../../util/Functions";
-import logo from "../../../assets/logo1.png";
+import logo from "../../../assets/logo.png";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -153,8 +153,8 @@ export default function Login({navigation}) {
         ) : (
           <>
             <View style={styles.titleBox}>
-              <Text style={styles.title}>Diet</Text>
-              <Image source = {require("../../../assets/logo1.png")}/>
+              <Text style={styles.title}>Diet App</Text>
+              <Image source = {require("../../../assets/logo.png")}/>
             </View>
             <View style={styles.inputBox}>
               <TouchableOpacity

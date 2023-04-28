@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     backgroundColor: "orange",
     marginBottom: 10,
     paddingVertical: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 50,
     borderRadius: 15,
   },
   dietText: {

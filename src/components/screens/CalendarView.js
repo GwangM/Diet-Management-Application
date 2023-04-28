@@ -1,10 +1,11 @@
 import React from "react";
 import { Calendar } from "react-native-calendars";
-import { StyleSheet } from "react-native";
+import { StyleSheet,View,Button } from "react-native";
 
 function CalendarView({navigation}) {
   
   return (
+    <View>
     <Calendar 
       style={styles.calendar} 
       theme={{
@@ -18,6 +19,12 @@ function CalendarView({navigation}) {
         navigation.navigate("DailyList");
       }}
       />
+      <Button title="현 위치 지도"
+      onPress={()=>{
+        navigation.navigate("LocationMap");
+      }}
+      />
+    </View>
   );
 }
 

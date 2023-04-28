@@ -3,6 +3,8 @@ import { StyleSheet,View } from "react-native";
 
 function EachDiet({navigation}) {
   //등록된 음식정보 있는지 확인, 없다면 표시해준다.
+  //name, calories, weight, tan, dan, ji, na
+  
 
   return (
     <View>
