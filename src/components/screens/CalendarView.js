@@ -19,6 +19,11 @@ function CalendarView({navigation}) {
         navigation.navigate("DailyList");
       }}
       />
+      <Button title="음식 사진"
+      onPress={()=>{
+        navigation.navigate("CameraView");
+      }}
+      />
       <Button title="현 위치 지도"
       onPress={()=>{
         navigation.navigate("LocationMap");

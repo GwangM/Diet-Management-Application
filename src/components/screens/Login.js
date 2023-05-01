@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 50,
+    marginBottom:200
   },
   title: {
     fontSize: 50,
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   googleButtonText: {
-    fontSize: 16,
+    fontSize: 30,
     color: "#FFFFFF",
   },
 
