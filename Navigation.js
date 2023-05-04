@@ -6,7 +6,7 @@ import DailyList from "./src/components/screens/DailyList";
 import EachDiet from "./src/components/screens/EachDiet";
 import LocationMap from "./src/components/screens/LocationMap";
 import CameraView from "./src/components/screens/CameraView";
-import CameraScreen from "./src/components/screens/CameraScreen";
+import FoodAnalysis from "./src/components/screens/FoodAnalysis";
 
 const Stack=createNativeStackNavigator();
 
@@ -20,7 +20,7 @@ export default function Navigation(){
         <Stack.Screen name ="EachDiet" component={EachDiet}/>
         <Stack.Screen name ="LocationMap" component={LocationMap}/>
         <Stack.Screen name ="CameraView" component={CameraView}/>
-        {/* <Stack.Screen name ="CameraScreen" component={CameraScreen}/> */}
+        <Stack.Screen name ="FoodAnalysis" component={FoodAnalysis}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
