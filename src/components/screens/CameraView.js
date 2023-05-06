@@ -62,5 +62,9 @@ const styles = StyleSheet.create({
     fontSize: 26,
   },
 });
-
 export default CameraView;
+
+// Path [D:/github/Diet-Management-Application/node_modules/expo/android/build/generated/expo/src/main/java] of module 
+//[Diet-Management-Application.expo.main] was removed from modules [Diet-Management-Application.expo.main
+//duplicate content roots detected
+///
