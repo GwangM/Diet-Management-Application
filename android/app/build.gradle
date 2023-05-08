@@ -109,13 +109,6 @@ def reactNativeArchitectures() {
 }
 
 android {
-    externalNativeBuild{
-   cmake{
-            path "../../node_modules/expo-modules-core/android/src/fabric/CMakeLists.txt"
-            //D:\github\Diet-Management-Application\node_modules\expo-modules-core\android\src\fabric
-            version "3.22.1"
-        }
-    }
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -128,7 +121,7 @@ android {
         versionCode 1
         versionName "1.0.0"
     }
-    
+
     splits {
         abi {
             reset()

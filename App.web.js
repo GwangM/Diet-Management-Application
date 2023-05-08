@@ -7,6 +7,7 @@ import { store } from "./src/components/redux/store/store";
 import { Provider } from "react-redux";
 import * as SplashScreen from "expo-splash-screen";
 import Navigation from "./Navigation";
+
 const queryClient = new QueryClient();
 
 export default function App() {

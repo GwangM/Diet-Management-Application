@@ -1,70 +1,41 @@
-import React from "react";
-import { StyleSheet, Modal, View, Pressable, Text } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import React,{useRef,useState} from "react";
+import { StyleSheet,View,toggleWhiteBalance,Pressable,Text,Alert,TouchableOpacity } from "react-native";
+import { AutoFocus, Camera, CameraType } from 'expo-camera';
 
-function CameraView({visible, onClose, onLaunchCamera, onLaunchImageLibrary}) {
+export default function CameraView({navigation}) {
+  function componentDidMount(){
+    (async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync();
+        this.setHasPermission(status !== undefined);
+    })();
+};
   return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={onClose} >
-      <Pressable style={styles.background} onPress={onClose}>
-        <View style={styles.whiteBox}>
-          <Pressable
-            style={styles.actionButton}
-            android_ripple={{color: "#eee"}}
-            onPress={() => {
-              onLaunchCamera();
-              onClose();
-            }} >
-            <Icon name="camera-alt" color="#757575" size={24} style={styles.icon} />
-            <Text style={styles.actionText}>카메라로 촬영하기</Text>
-          </Pressable>
-          <Pressable
-            style={styles.actionButton}
-            android_ripple={{color: "#eee"}}
-            onPress={() => {
-              onLaunchImageLibrary();
-              onClose();
-            }} >
-            <Icon name="photo" color="#757575" size={24} style={styles.icon} />
-            <Text style={styles.actionText}>사진 선택하기</Text>
-          </Pressable>
-        </View>
-      </Pressable>
-    </Modal>
+<Camera
+  style={{flex:1 }}
+  ref={(ref) => {
+  this.camera = ref;
+  }}
+ >
+    <View
+        style={{
+        flex: 1,
+        backgroundColor: 'transparent',
+        flexDirection: 'row',
+        }}
+    >
+        <TouchableOpacity
+            style={{
+            flex: 1,
+            alignSelf: 'flex-end',
+            alignItems: 'center',
+            }}
+            onPress={this.setSnap}
+        >
+            <Text style={{ fontSize: 18, marginBottom: 10, color: 'white',alignItems:'center' }} >
+              사진 찍기
+            </Text>
+        </TouchableOpacity>
+    </View>
+</Camera>
   );
 }
-
-const styles = StyleSheet.create({
-  background: {
-    backgroundColor: "rgba(0,0,0,0,6)",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  whiteBox: {
-    width: 300,
-    backgroundColor: "white",
-    borderRadius: 4,
-    elevation: 2,
-  },
-  actionButton: {
-    padding: 16,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  icon: {
-    marginRight: 8,
-  },
-  text: {
-    fontSize: 26,
-  },
-});
-export default CameraView;
-
-// Path [D:/github/Diet-Management-Application/node_modules/expo/android/build/generated/expo/src/main/java] of module 
-//[Diet-Management-Application.expo.main] was removed from modules [Diet-Management-Application.expo.main
-//duplicate content roots detected
-///

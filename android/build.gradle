@@ -6,8 +6,9 @@ buildscript {
         minSdkVersion = Integer.parseInt(findProperty('android.minSdkVersion') ?: '21')
         compileSdkVersion = Integer.parseInt(findProperty('android.compileSdkVersion') ?: '33')
         targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '33')
-        
-        kotlinVersion = '1.6.20'
+        if (findProperty('android.kotlinVersion')) {
+            kotlinVersion = findProperty('android.kotlinVersion')
+        }
         frescoVersion = findProperty('expo.frescoVersion') ?: '2.5.0'
 
         // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
@@ -18,13 +19,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        //classpath('com.android.tools.build:gradle:7.1.1')
-        //classpath('com.facebook.react:react-native-gradle-plugin')
-        //추가
-        classpath('com.android.tools.build:gradle:7.3.0')
-                classpath('com.facebook.react:react-native-gradle-plugin')
-                classpath('de.undercouch:gradle-download-task:5.0.1')
-                classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.20")
+        classpath('com.android.tools.build:gradle:7.4.1')
+        classpath('com.facebook.react:react-native-gradle-plugin')
     }
 }
 
