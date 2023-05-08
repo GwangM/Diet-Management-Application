@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"; //--save --legacy-peer-deps
-import {
+import {//npm run start-react
   StyleSheet,
   Text,
   View,
@@ -112,32 +112,6 @@ export default function Login({navigation}) {
       }
     }
   });
-
-  const userSignIn = async () => {
-    setIsWarning(false);
-    const hashPassword = await GetHash(password);
-    const auth = getAuth();
-
-    signInWithEmailAndPassword(auth, email, hashPassword)
-      .then((userCredential) => {
-        setIsEnter(true);
-        const user = userCredential.user;
-        const { uid, email, accessToken } = user;
-        get(child(dbRef, `users/${uid}`))
-          .then((data) => {
-            if (data.exists()) {
-              const displayName = data.val().displayName;
-              setUserState(uid, email, displayName, accessToken, "init");
-            }
-          })
-          .then(() => {
-            setIsEnter(false);
-          });
-      })
-      .catch((error) => {
-        setIsWarning(true);
-      });
-  };
 
   return (
     <TouchableWithoutFeedback

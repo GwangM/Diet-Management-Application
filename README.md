@@ -1,1 +1,0 @@
-# Diet-Management-Application

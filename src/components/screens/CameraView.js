@@ -1,6 +1,5 @@
 import React,{useRef,useState} from "react";
 import { StyleSheet,View,toggleWhiteBalance,Pressable,Text,Alert,TouchableOpacity } from "react-native";
-import { AutoFocus, Camera, CameraType } from 'expo-camera';
 
 export default function CameraView({navigation}) {
   function componentDidMount(){
