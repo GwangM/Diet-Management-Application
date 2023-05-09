@@ -11,7 +11,11 @@ const babelLoaderConfiguration = {
     options: {
       cacheDirectory: true,
       presets: ['@babel/preset-react'],
-      plugins: ['react-native-web'],
+      plugins: ['react-native-web',
+    ["@babel/transform-runtime",{"absoluteRuntime": false,
+    "corejs": false,
+    "helpers": false,
+    "regenerator": true}]],
       include:[
         path.resolve(appDirectory, 'node_modules/react-native/Libraries'),
       ]
