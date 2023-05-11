@@ -22,14 +22,17 @@ import {
 import { setUser } from "../redux/slice/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { get, ref, update, child } from "firebase/database";
-import { db } from "../../../firebaseConfig.js";
 
-import * as Google from "expo-auth-session/providers/google";
-import * as WebBrowser from "expo-web-browser";
+
+//import * as Google from "expo-auth-session/providers/google";
+//import * as WebBrowser from "expo-web-browser";
 import { GetHash } from "../../util/Functions";
 import logo from "../../../assets/logo.png";
+import { GoogleSignin,GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 
-WebBrowser.maybeCompleteAuthSession();
+
+//WebBrowser.maybeCompleteAuthSession();
 
 export default function Login({navigation}) {
   const [email, setEmail] = useState("");
@@ -39,79 +42,89 @@ export default function Login({navigation}) {
 
   const dispatch = useDispatch();
 
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    clientId: '12711112780-emgc8pm1tpl4gkrpt041akva9t1f4d2p.apps.googleusercontent.com',
-  });
+  const googleSigninConfigure = () => {
+    GoogleSignin.configure({
+      webClientId:
+        '1008555191749-0c8jv0pjcd0ss1bloh41afacc4ed86b8.apps.googleusercontent.com',
+    })
+  }
+  const onGoogleButtonPress = async () => {
+    const { idToken } = await GoogleSignin.signIn();
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    return auth().signInWithCredential(googleCredential);
+}
+  
+  // const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+  //   clientId: '12711112780-emgc8pm1tpl4gkrpt041akva9t1f4d2p.apps.googleusercontent.com',
+  // });
 
   const openGoogleLogin = () => {
-    promptAsync();
+    //promptAsync();
   };
 
-  const auth = getAuth();
-  const user = auth.currentUser; //현재 접속한 사용자의 프로필 정보 가져올 수 있다.
-  const dbRef = ref(db);
-
-  useEffect(() => {
-    if (response?.type === "success") {
-      setIsEnter(true);
-      const { id_token } = response.params;
+ 
+  // useEffect(() => {
+  //   if (response?.type === "success") {
+  //     setIsEnter(true);
+  //     const { id_token } = response.params;
     
       
 
-      const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential);
+  //     const credential = GoogleAuthProvider.credential(id_token);
+  //     signInWithCredential(auth, credential);
 
-      fetch("https://f854-2001-e60-87e0-f901-1cf5-308a-dbc1-4558.ngrok-free.app/oauth2/google?id_token="+id_token, {
-      method: "GET",
-      headers: { 
-          }, 
-          })
-        //   .then(function (response) {
-        //     if (response.ok) {
-        //         return response.text();
-        //     } else {
-        //         alert('오류');
-        //     }
-        // })
+  //     fetch("https://f854-2001-e60-87e0-f901-1cf5-308a-dbc1-4558.ngrok-free.app/oauth2/google?id_token="+id_token, {
+  //     method: "GET",
+  //     headers: { 
+  //         }, 
+  //         })
+  //       //   .then(function (response) {
+  //       //     if (response.ok) {
+  //       //         return response.text();
+  //       //     } else {
+  //       //         alert('오류');
+  //       //     }
+  //       // })
       
-    }
-  }, [response]);
+  //   }
+  // }, [response]);
 
-  const setUserInfo = (uid, displayName) => {
-    const updates = {};
-    updates["/users/" + uid] = { displayName, uid};
-    update(dbRef, updates);
-  };
+  useEffect(()=>{
+googleSigninConfigure();
 
-  const setUserState = (uid, email, displayName, accessToken, loginType) => {
-    dispatch(
-      setUser({
-        uid,
-        email,
-        name: displayName,
-        accessToken,
-        isLogin: true,
-        loginType,
-      })
-    );
-  };
+  })
+  // const auth = getAuth();
+  // const user = auth.currentUser; //현재 접속한 사용자의 프로필 정보 가져올 수 있다.
 
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      let { uid, email, displayName, accessToken } = user;
-      if (!!displayName) {
-        const dbDisplayName = await get(child(dbRef, `users/${uid}`));
+  // const setUserInfo = (uid, displayName) => {
+  //   const updates = {};
+  //   updates["/users/" + uid] = { displayName, uid};
+  // };
 
-        if (dbDisplayName.exists()) {
-          displayName = dbDisplayName.val().displayName;
-        }
+  // const setUserState = (uid, email, displayName, accessToken, loginType) => {
+  //   dispatch(
+  //     setUser({
+  //       uid,
+  //       email,
+  //       name: displayName,
+  //       accessToken,
+  //       isLogin: true,
+  //       loginType,
+  //     })
+  //   );
+  // };
 
-        setUserState(uid, email, displayName, accessToken, "google");
-        setUserInfo(uid, displayName);
-        setIsEnter(false);
-      }
-    }
-  });
+  // onAuthStateChanged(auth, async (user) => {
+  //   if (user) {
+  //     let { uid, email, displayName, accessToken } = user;
+  //     if (!!displayName) {
+
+  //       setUserState(uid, email, displayName, accessToken, "google");
+  //       setUserInfo(uid, displayName);
+  //       setIsEnter(false);
+  //     }
+  //   }
+  // });
 
   return (
     <TouchableWithoutFeedback
@@ -133,9 +146,9 @@ export default function Login({navigation}) {
             <View style={styles.inputBox}>
               <TouchableOpacity
                 style={[styles.buttonContainer, styles.googleLoginButton]}
-                disabled={!request}
                 onPress={() => {
-                  openGoogleLogin();
+                  // openGoogleLogin();
+                  onGoogleButtonPress();
                   navigation.navigate("CalendarView");
                 }}
               >
