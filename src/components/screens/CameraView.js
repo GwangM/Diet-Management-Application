@@ -1,40 +1,64 @@
-import React,{useRef,useState} from "react";
-import { StyleSheet,View,toggleWhiteBalance,Pressable,Text,Alert,TouchableOpacity } from "react-native";
+import React from "react";
+import { StyleSheet, Modal, View, Pressable, Text } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
-export default function CameraView({navigation}) {
-  function componentDidMount(){
-    (async () => {
-        const { status } = await Camera.requestCameraPermissionsAsync();
-        this.setHasPermission(status !== undefined);
-    })();
-};
-  return (
-<Camera
-  style={{flex:1 }}
-  ref={(ref) => {
-  this.camera = ref;
-  }}
- >
-    <View
-        style={{
-        flex: 1,
-        backgroundColor: 'transparent',
-        flexDirection: 'row',
-        }}
-    >
-        <TouchableOpacity
-            style={{
-            flex: 1,
-            alignSelf: 'flex-end',
-            alignItems: 'center',
-            }}
-            onPress={this.setSnap}
-        >
-            <Text style={{ fontSize: 18, marginBottom: 10, color: 'white',alignItems:'center' }} >
-              사진 찍기
-            </Text>
-        </TouchableOpacity>
-    </View>
-</Camera>
-  );
-}
+export default function CameraView({visible, onClose, onLaunchCamera, onLaunchImageLibrary}) {
+    return (
+      <Modal
+        visible={visible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={onClose} >
+        <Pressable style={styles.background} onPress={onClose}>
+          <View style={styles.whiteBox}>
+            <Pressable
+              style={styles.actionButton}
+              android_ripple={{color: "#eee"}}
+              onPress={() => {
+                onLaunchCamera();
+                onClose();
+              }} >
+              <Text style={styles.actionText}>카메라 촬영</Text>
+            </Pressable>
+            <Pressable
+              style={styles.actionButton}
+              android_ripple={{color: "#eee"}}
+              onPress={() => {
+                onLaunchImageLibrary();
+                onClose();
+              }} >
+              <Text style={styles.actionText}>사진 선택</Text>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+    );
+  }
+  
+  const styles = StyleSheet.create({
+    background: {
+      backgroundColor: "rgba(0,0,0,0,6)",
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    whiteBox: {
+      width: 300,
+      backgroundColor: "white",
+      borderRadius: 4,
+      elevation: 2,
+      justifyContent: "center",
+    alignItems: "center",
+    },
+    actionButton: {
+      padding: 16,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    icon: {
+      marginRight: 8,
+    },
+    text: {
+      fontSize: 26,
+    },
+  });

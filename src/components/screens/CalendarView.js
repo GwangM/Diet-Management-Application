@@ -1,9 +1,12 @@
 import React from "react";
 import { Calendar } from "react-native-calendars";
 import { StyleSheet,View,Button } from "react-native";
-
+import {useSelector,useDispatch,Provider} from "react-redux";
+import {store} from "../redux/store/store";
+import auth from '@react-native-firebase/auth';
 function CalendarView({navigation}) {
-  
+  const dispatch = useDispatch();
+  const email = useSelector((state) => state.user.email);
   return (
     <View>
     <Calendar 
@@ -21,12 +24,18 @@ function CalendarView({navigation}) {
       />
       <Button title="음식 사진"
       onPress={()=>{
-        navigation.navigate("CameraView");
+        navigation.navigate("FoodAnalysis");
       }}
       />
       <Button title="현 위치 지도"
       onPress={()=>{
         navigation.navigate("LocationMap");
+      }}
+      />
+      <Button title="로그아웃"
+      onPress={()=>{
+        auth().signOut()
+        navigation.navigate("Login");
       }}
       />
     </View>

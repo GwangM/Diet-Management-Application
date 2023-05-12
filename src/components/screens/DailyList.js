@@ -14,6 +14,9 @@ function DailyList({navigation}) {
      <View style={styles.diet}> 
       <Text style ={styles.dietText}>저녁</Text>
      </View>
+     <View style={styles.diet}> 
+      <Text style ={styles.dietText}>간식</Text>
+     </View>
     </View>
   );
 }

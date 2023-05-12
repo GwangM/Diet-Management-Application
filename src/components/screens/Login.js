@@ -12,13 +12,7 @@ import {//npm run start-react
 } from "react-native";
 
 import { windowWidth, windowHeight } from "../../util/WH";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithCredential,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+
 import { setUser } from "../redux/slice/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { get, ref, update, child } from "firebase/database";
@@ -26,8 +20,6 @@ import { get, ref, update, child } from "firebase/database";
 
 //import * as Google from "expo-auth-session/providers/google";
 //import * as WebBrowser from "expo-web-browser";
-import { GetHash } from "../../util/Functions";
-import logo from "../../../assets/logo.png";
 import { GoogleSignin,GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 
@@ -38,7 +30,22 @@ export default function Login({navigation}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEnter, setIsEnter] = useState(false);
-  const [isWarning, setIsWarning] = useState(false);
+  const [login, setLogin] = useState(false);
+
+  const checkLoggedIn = () => {
+    auth().onAuthStateChanged((user) => {
+        if (user) {
+            setLogin(true)
+            let { uid, email, displayName, accessToken } = user;
+            setUserState(uid, email, displayName, accessToken, "google");
+            setUserInfo(uid, displayName);
+            navigation.navigate("CalendarView");   
+        } else {
+            setLogin(false)
+        }
+    }
+    )
+  }
 
   const dispatch = useDispatch();
 
@@ -52,6 +59,18 @@ export default function Login({navigation}) {
     const { idToken } = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
     return auth().signInWithCredential(googleCredential);
+
+       fetch("https://30a4-2001-e60-d300-3a46-1d0e-1dec-b71a-2fb5.ngrok-free.app/oauth2/google?id_token="+idToken, {
+      method: "GET" 
+          })
+          .then(function (response) {
+            if (response.ok) {
+                return auth().signInWithCredential(googleCredential);
+            } else {
+                console.log('오류');
+            }
+        })
+
 }
   
   // const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
@@ -68,63 +87,36 @@ export default function Login({navigation}) {
   //     setIsEnter(true);
   //     const { id_token } = response.params;
     
-      
-
-  //     const credential = GoogleAuthProvider.credential(id_token);
-  //     signInWithCredential(auth, credential);
-
-  //     fetch("https://f854-2001-e60-87e0-f901-1cf5-308a-dbc1-4558.ngrok-free.app/oauth2/google?id_token="+id_token, {
-  //     method: "GET",
-  //     headers: { 
-  //         }, 
-  //         })
-  //       //   .then(function (response) {
-  //       //     if (response.ok) {
-  //       //         return response.text();
-  //       //     } else {
-  //       //         alert('오류');
-  //       //     }
-  //       // })
-      
-  //   }
-  // }, [response]);
 
   useEffect(()=>{
 googleSigninConfigure();
-
+    checkLoggedIn();
+    if(login){  
+      navigation.navigate("CalendarView");
+    }
   })
   // const auth = getAuth();
   // const user = auth.currentUser; //현재 접속한 사용자의 프로필 정보 가져올 수 있다.
 
-  // const setUserInfo = (uid, displayName) => {
-  //   const updates = {};
-  //   updates["/users/" + uid] = { displayName, uid};
-  // };
+  const setUserInfo = (uid, displayName) => {
+    const updates = {};
+    updates["/users/" + uid] = { displayName, uid};
+  };
 
-  // const setUserState = (uid, email, displayName, accessToken, loginType) => {
-  //   dispatch(
-  //     setUser({
-  //       uid,
-  //       email,
-  //       name: displayName,
-  //       accessToken,
-  //       isLogin: true,
-  //       loginType,
-  //     })
-  //   );
-  // };
+  const setUserState = (uid, email, displayName, accessToken, loginType) => {
+    dispatch(
+      setUser({
+        uid,
+        email,
+        name: displayName,
+        accessToken,
+        isLogin: true,
+        loginType,
+      })
+    );
+  };
 
-  // onAuthStateChanged(auth, async (user) => {
-  //   if (user) {
-  //     let { uid, email, displayName, accessToken } = user;
-  //     if (!!displayName) {
-
-  //       setUserState(uid, email, displayName, accessToken, "google");
-  //       setUserInfo(uid, displayName);
-  //       setIsEnter(false);
-  //     }
-  //   }
-  // });
+  //onAuthStateChanged
 
   return (
     <TouchableWithoutFeedback
@@ -149,7 +141,6 @@ googleSigninConfigure();
                 onPress={() => {
                   // openGoogleLogin();
                   onGoogleButtonPress();
-                  navigation.navigate("CalendarView");
                 }}
               >
                 <Text style={[styles.buttonText, styles.googleButtonText]}>
