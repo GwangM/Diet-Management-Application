@@ -19,7 +19,27 @@ function FoodAnalysis({navigation}) {
     if (res.didCancel || !res) {
       return;
     }
-    console.log("PickImage", res);
+    //console.log(res); res에 있는 이미지정보를 post해서 음식 정보를 받아온다.
+    Image = new Blob([new Uint8Array(array)], {type: 'image/jpeg'});//array값은 이미지 decode값
+    const form = new FormData();
+    form.enctype = "multipart/form-data";
+    const fileName ='imagename.jpg';
+    form.set("file", Image, fileName);
+
+
+    fetch("http://", {//i cloud api로 보낸다.
+    method: "POST",
+    headers: { 
+        }, 
+    body: form
+        }).then(function (response) {//음식 정보를 응답으로 받는다.
+            if (response.ok) {
+                console.log("post 성공");
+                //return response.text();
+            } else {
+                alert('post 오류');
+            }
+        })
   }
   
   // 카메라 촬영

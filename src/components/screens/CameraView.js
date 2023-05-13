@@ -27,7 +27,7 @@ export default function CameraView({visible, onClose, onLaunchCamera, onLaunchIm
                 onLaunchImageLibrary();
                 onClose();
               }} >
-              <Text style={styles.actionText}>사진 선택</Text>
+              <Text style={styles.actionText}>갤러리에서 선택</Text>
             </Pressable>
           </View>
         </Pressable>
