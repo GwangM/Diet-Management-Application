@@ -101,6 +101,8 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true 
+        buildConfigField "String", "MAPS_API_KEY", properties['maps_api_key'] 
+        buildConfigField "String", "PLACES_API_KEY", properties['places_api_key'] 
     }
 
     splits {

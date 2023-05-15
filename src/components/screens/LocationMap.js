@@ -1,74 +1,52 @@
-import React,{useState,useEffect} from "react";
-import { StyleSheet,View,Alert } from "react-native";
-import MapView,{PROVIDER_GOOGLE} from "react-native-maps";
+import React, {useState, useEffect} from 'react';
+import Styled from 'styled-components/native';
+import MapView, {Marker} from 'react-native-maps';
+import Geolocation from 'react-native-geolocation-service';
+
+const Container = Styled.View`
+    flex: 1;
+`;
 
 
-function LocationMap({navigation}) {
-  const [latitude_now,setLatitude]=useState(0);
-  const [longitude_now,setLongitude]=useState(127.000);
-  const[ok,setOk]=useState(false);
+const UserLocation = () => {
+  const [location, setLocation] = useState(undefined);
 
-  const getLocation=async()=>{
-    try{
-    const {granted}=await Location.requestForegroundPermissionsAsync();
-    if(!granted){
-      //거절했을 경우 서울 기준
-      setLatitude(37.5);
-      setLongitude(127.000);
-      setOk(false);
-    }
-    else{
-    const{coords:{latitude,longitude},}=await Location.getCurrentPositionAsync({accuracy:10});
-    setOk(true);
-    //await setLoc(latitude,longitude);
-    }; 
-  } 
-  catch(e){
-    Alert.alert("위치 정보 오류");
-  }
-  }
-
-  useEffect(()=>{getLocation();},[]);
-  if(ok){
-    return (
-      <View style={styles.container}>
-        <MapView style={styles.map} 
-        initialRegion={{
-          latitude:{latitude_now},
-          longitude:{longitude_now},
-          latitudeDelta:1,
-          longitudeDelta:1,
-        }}
-        provider={PROVIDER_GOOGLE}></MapView>
-        </View>
+  useEffect(() => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const {latitude, longitude} = position.coords;
+        setLocation({
+          latitude,
+          longitude,
+        });
+      },
+      error => {
+        console.log(error.code, error.message);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
-      }
-  else{
+  }, []);
   return (
-    <View style={styles.container}>
-      <MapView style={styles.map} 
-      initialRegion={{
-        latitude:37.50,
-        longitude:127.0000,
-        latitudeDelta:1,
-        longitudeDelta:1,
-      }}
-      provider={PROVIDER_GOOGLE}></MapView>
-      </View>
+    <Container>
+      {location && (
+        <MapView
+          style={{flex: 1}}
+          initialRegion={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}>
+          <Marker
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+          />
+        </MapView>
+      )}
+    </Container>
   );
-  }
-}
-export default LocationMap;
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#9DD84B",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  map:{
-	  width: "100%",
-  	  height : "100%"
-	}
-});
+export default UserLocation;
