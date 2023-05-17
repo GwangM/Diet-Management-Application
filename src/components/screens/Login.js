@@ -58,9 +58,9 @@ export default function Login({navigation}) {
   const onGoogleButtonPress = async () => {
     const { idToken } = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    return auth().signInWithCredential(googleCredential);
+    //return auth().signInWithCredential(googleCredential);
 
-       fetch("https://30a4-2001-e60-d300-3a46-1d0e-1dec-b71a-2fb5.ngrok-free.app/oauth2/google?id_token="+idToken, {
+       fetch("https://a318-2001-e60-d303-3ca0-5801-ba3e-3ed2-6930.ngrok-free.app/oauth2/google?id_token="+idToken, {
       method: "GET" 
           })
           .then(function (response) {
