@@ -44,7 +44,7 @@ export default function FoodAnalysis({navigation}) {
     const fileName ='imagename.jpg';
     const fileType="image/jpeg";
     const name="image";
-    form.append("data", arr);
+    form.append("data", Image);
     form.append("name","ddd");
     form.append("filename","sss");
     form.append("type","aaa");
@@ -62,22 +62,36 @@ export default function FoodAnalysis({navigation}) {
   // WARN  RNFetchBlob failed to create request multipart body :Value for data cannot be cast from ReadableNativeMap to String
   // WARN  Attempt to invoke virtual method 'int java.io.InputStream.read(byte[], int, int)' on a null object reference
   
-  fetch("https://bc82-2001-e60-d305-eaac-99bb-1c22-9646-6f89.ngrok-free.app/diary/check",{
-  method:"POST", 
-  Headers:{},
-  body:form
-    }).then(function (response) {//음식 정보를 응답으로 받는다.
-            if (response.ok) {
-                console.log("post 성공");
-                console.log(response);
-                return response.text();
-            } else {
-                console.log('post 오류');
-            }
-        }).catch((err) => {
-          console.log('에러')
-          console.log(err)
-        })
+  // fetch("https://bc82-2001-e60-d305-eaac-99bb-1c22-9646-6f89.ngrok-free.app/diary/check",{
+  // method:"POST", 
+  // Headers:{},
+  // body:form
+  //   }).then(function (response) {//음식 정보를 응답으로 받는다.
+  //           if (response.ok) {
+  //               console.log("post 성공");
+  //               console.log(response);
+  //               return response.text();
+  //           } else {
+  //               console.log('post 오류');
+  //           }
+  //       }).catch((err) => {
+  //         console.log('에러')
+  //         console.log(err)
+  //       })
+
+        RNFetchBlob.fetch('POST', "", {
+        'x-api-key':'',  
+        'Content-Type': 'multipart/form-data',}, [
+       { name: 'image', filename: "image.jpg", data: RNFetchBlob.base64.encode(decodImg) },
+             // { name: 'name', data: 'aaa' },
+              // custom content type
+          ]).then((res) => {
+              console.log(res);
+          })
+          .catch((err) => {
+              console.log(err, "에러");
+          })
+
   } 
 
   // 카메라 촬영

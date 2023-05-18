@@ -11,9 +11,6 @@ buildscript {
         ndkVersion = "23.1.7779620"
     }
     repositories {
-       maven {
-            url = "https://repo1.maven.org/maven2"
-        }
         google()
         mavenCentral()
     }
@@ -25,9 +22,6 @@ buildscript {
 }
 allprojects {
   repositories {
-    maven {
-            url = "https://repo1.maven.org/maven2"
-        }
     // Make sure that you have the following two repositories
     google()  // Google's Maven repository
 
