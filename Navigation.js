@@ -13,7 +13,7 @@ const Stack=createNativeStackNavigator();
 export default function Navigation(){
   return(
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="CalendarView">
         <Stack.Screen name = "Login" component={Login}/>      
         <Stack.Screen name = "CalendarView" component={CalendarView}/>
         <Stack.Screen name ="DailyList" component={DailyList}/>
