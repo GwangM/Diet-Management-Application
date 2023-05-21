@@ -16,6 +16,7 @@ function DailyList({navigation, route}) {
       }
           }).then(response => response.json()).then(response => {
             if(response){
+              console.log(response);//{"diaries": [{"diaryId": 1, "diaryImage": [Object], "foods": [Array], "lat": 37.2429406, "lnt": 127.0677065, "mealTime": "Breakfast", "member": [Object], "writeDate": "2023-05-05"}], "diaryExist": [true, false, false, false]}
               //{"diaries": [], "diaryExist": [false, false, false, false]}
               setList(response.diaryExist);
               for (i = 0; i < 4; i++) {
@@ -43,7 +44,7 @@ function DailyList({navigation, route}) {
           //   } else {
           //       console.log('오류');
           //   }
-})//"2023-00-00" route.params.date 글씨 크기 키우고 베이지, 회색
+},[])//"2023-00-00" route.params.date 글씨 크기 키우고 베이지, 회색
  
  return (
     <View style={styles.container}>
