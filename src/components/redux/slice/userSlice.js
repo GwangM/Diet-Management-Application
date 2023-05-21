@@ -5,7 +5,7 @@ const initialState = {
   name: "",
   email: "",
   accessToken: "",
-  sameUserList: {},
+  address: "https://3fac-2001-e60-d200-bb68-c89c-2527-e541-7596.ngrok-free.app",
   isLogin: false,
   loginType: "",
   searchType: "",
@@ -32,15 +32,15 @@ const userSlice = createSlice({
     setAccessToken(state, action) {
       state.accessToken = action.payload;
     },
-    setSameUserList(state, action) {
-      state.sameUserList = action.payload;
+    setAddress(state, action) {
+      state.address = action.payload;
     },
     userSliceReset(state) {
       state.uid = "";
       state.email = "";
       state.name = "";
       state.accessToken = "";
-      state.sameUserList = [];
+      state.address = "https://3fac-2001-e60-d200-bb68-c89c-2527-e541-7596.ngrok-free.app";
       state.isLogin = false;
       state.loginType = "";
       state.searchType = null;
@@ -58,7 +58,7 @@ export const {
   setName,
   setEmail,
   setAccessToken,
-  setSameUserList,
+  setAddress,
   userSliceReset,
   setSearchType,
 } = userSlice.actions;

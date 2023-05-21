@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {View,StyleSheet,Platform,PermissionsAndroid}from 'react-native';
-import MapView, {Marker,PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import { windowHeight,windowWidth } from '../../util/WH';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Config from 'react-native-config';
+import NaverMapView, {Circle, Marker, Path, Polyline, Polygon} from "react-native-nmap";
 
 export default function LocationMap({navigation}){
   const [location, setLocation] = useState(undefined);
@@ -35,26 +34,53 @@ async function requestPermissions() {
     requestPermissions();
   }, []);
   return (
-    <View style={styles.container}>
-      {location && (
-        <MapView
-          style={{flex: 1,width: windowWidth, height: windowHeight}}
-          initialRegion={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.00422,
-            longitudeDelta: 0.00422,
-          }}>
+    <View
+  style={{
+    width: windowWidth,
+    height: windowHeight,
+    marginTop: 10,
+  }}
+>
+{location && (
+  <NaverMapView
+    style={{ width: "100%", height: "100%" }}
+    zoomControl={false}
+    center={{
+      zoom: 10,
+      tilt: 50,
+      latitude: location.latitude,
+      longitude: location.longitude,
+    }}
+  >
+    <Marker
+      coordinate={{
+        latitude: location.latitude,
+        longitude: location.longitude,
+      }}
+      pinColor="blue"
+    />
+  </NaverMapView>)}
+</View>
+    // <View style={styles.container}>
+    //   {location && (
+    //     <MapView
+    //       style={{flex: 1,width: windowWidth, height: windowHeight}}
+    //       initialRegion={{
+    //         latitude: location.latitude,
+    //         longitude: location.longitude,
+    //         latitudeDelta: 0.00422,
+    //         longitudeDelta: 0.00422,
+    //       }}>
           
-          <Marker
-            coordinate={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-            }}
-          />
-        </MapView>  
-      )}
-    </View>
+    //       <Marker
+    //         coordinate={{
+    //           latitude: location.latitude,
+    //           longitude: location.longitude,
+    //         }}
+    //       />
+    //     </MapView>  
+    //   )}
+    // </View>
   );
 };
 

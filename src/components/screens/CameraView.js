@@ -1,6 +1,5 @@
 import React from "react";
 import { StyleSheet, Modal, View, Pressable, Text } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function CameraView({visible, onClose, onLaunchCamera, onLaunchImageLibrary}) {
     return (

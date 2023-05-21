@@ -3,21 +3,15 @@ import {//npm run start-react
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
-  ActivityIndicator,
   Keyboard,
   TouchableWithoutFeedback,
   Image
 } from "react-native";
 
 import { windowWidth, windowHeight } from "../../util/WH";
-
 import { setUser } from "../redux/slice/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { get, ref, update, child } from "firebase/database";
-
-
 //import * as Google from "expo-auth-session/providers/google";
 //import * as WebBrowser from "expo-web-browser";
 import { GoogleSignin,GoogleSigninButton } from '@react-native-google-signin/google-signin';
@@ -27,8 +21,8 @@ import auth from '@react-native-firebase/auth';
 //WebBrowser.maybeCompleteAuthSession();
 
 export default function Login({navigation}) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [google, setGoogle] = useState(false);
+  const [token, setToken] = useState("");
   const [isEnter, setIsEnter] = useState(false);
   const [login, setLogin] = useState(false);
 
@@ -37,9 +31,11 @@ export default function Login({navigation}) {
         if (user) {
             setLogin(true)
             let { uid, email, displayName, accessToken } = user;
-            setUserState(uid, email, displayName, accessToken, "google");
+            setUserState(uid, email, displayName, token, "google");
             setUserInfo(uid, displayName);
-            navigation.navigate("CalendarView");   
+            if(isEnter){
+            navigation.navigate("CalendarView");
+          }   
         } else {
             setLogin(false)
         }
@@ -48,7 +44,7 @@ export default function Login({navigation}) {
   }
 
   const dispatch = useDispatch();
-
+  const address = useSelector((state) => state.user.address);
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       webClientId:
@@ -60,11 +56,16 @@ export default function Login({navigation}) {
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
     //return auth().signInWithCredential(googleCredential);
 
-       fetch("https://a318-2001-e60-d303-3ca0-5801-ba3e-3ed2-6930.ngrok-free.app/oauth2/google?id_token="+idToken, {
+       fetch(address+"/oauth2/google?id_token="+idToken, {
       method: "GET" 
           })
           .then(function (response) {
             if (response.ok) {
+                //setToken("");
+                const res_cookie=response.headers.map["set-cookie"];
+                const end= res_cookie.indexOf(";")
+                const refresh_token = res_cookie.slice(14,end);
+                setToken(refresh_token);
                 return auth().signInWithCredential(googleCredential);
             } else {
                 console.log('오류');
@@ -80,20 +81,15 @@ export default function Login({navigation}) {
   const openGoogleLogin = () => {
     //promptAsync();
   };
-
- 
-  // useEffect(() => {
-  //   if (response?.type === "success") {
-  //     setIsEnter(true);
-  //     const { id_token } = response.params;
     
 
   useEffect(()=>{
-googleSigninConfigure();
+    if(!google){
+    googleSigninConfigure();
+      setGoogle(true);
+  }else{
     checkLoggedIn();
-    if(login){  
-      navigation.navigate("CalendarView");
-    }
+  }
   })
   // const auth = getAuth();
   // const user = auth.currentUser; //현재 접속한 사용자의 프로필 정보 가져올 수 있다.
@@ -125,12 +121,6 @@ googleSigninConfigure();
       }}
     >
       <View style={styles.container}>
-        {isEnter ? (
-          <View style={[styles.centered, styles.backgroundBlack]}>
-            <ActivityIndicator size="large" color="tomato" />
-          </View>
-        ) : (
-          <>
             <View style={styles.titleBox}>
               <Text style={styles.title}>Diet App</Text>
               <Image source = {require("../../../assets/logo.png")}/>
@@ -140,6 +130,7 @@ googleSigninConfigure();
                 style={[styles.buttonContainer, styles.googleLoginButton]}
                 onPress={() => {
                   // openGoogleLogin();
+                  setIsEnter(true);
                   onGoogleButtonPress();
                 }}
               >
@@ -148,8 +139,6 @@ googleSigninConfigure();
                 </Text>
               </TouchableOpacity>
             </View>
-          </>
-        )}
       </View>
     </TouchableWithoutFeedback>
   );

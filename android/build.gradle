@@ -26,6 +26,9 @@ allprojects {
     google()  // Google's Maven repository
 
     mavenCentral()  // Maven Central repository
-
+  maven {
+            // url 'https://navercorp.bintray.com/maps'
+            url 'https://naver.jfrog.io/artifactory/maven/'
+        }
   }
 }

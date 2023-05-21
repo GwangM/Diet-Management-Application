@@ -14,10 +14,9 @@ android:targetSandboxVersion="1">
       android:usesCleartextTraffic="true"
       android.networkSecurityConfig="@xml/network_security_config"
       >
-      <meta-data 
-      android:name="com.google.android.geo.API_KEY" 
-      android:value="${googleMapApiKey}"
-      />
+      <meta-data
+      android:name="com.naver.maps.map.CLIENT_ID"
+      android:value="${naverMapApiClient}"/>
       <uses-library android:name="org.apache.http.legacy" android:required="false"/>   
       <activity
         android:name=".MainActivity"

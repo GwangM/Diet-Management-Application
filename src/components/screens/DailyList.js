@@ -1,22 +1,79 @@
-import React from "react";
-import { ScrollView, StyleSheet,View,Text } from "react-native";
+import React,{useEffect,useState} from "react";
+import { ScrollView, StyleSheet,View,Text,Button,TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
 
-function DailyList({navigation}) {
-  
-  return (
+function DailyList({navigation, route}) {
+  const address = useSelector((state) => state.user.address);
+  const token=useSelector(state => state.user.accessToken);
+  const [diet, setDiet] = useState([false,false,false,false]);//object 형식으로("아침":식단) 저장한다.
+  const [list,setList]=useState([false, false, false, false]);
+  useEffect(()=>{
+
+    fetch(address+"/diary/check-read?date="+route.params.date, {  
+    method: "GET",
+    headers : {
+      Authorization: "Bearer "+token
+      }
+          }).then(response => response.json()).then(response => {
+            if(response){
+              //{"diaries": [], "diaryExist": [false, false, false, false]}
+              setList(response.diaryExist);
+              for (i = 0; i < 4; i++) {
+                if (list[i]){ //순회하며 식단 저장
+                  if(i==0){
+
+                  }
+                  else if(i==1){
+
+                  }
+                  else if(i==2){
+
+                  }
+                  else{
+
+                  }
+                }
+              } 
+            }
+          })
+          
+          // .then(function (response) {
+          //   if (response.ok) {
+          //       console.log(response);
+          //   } else {
+          //       console.log('오류');
+          //   }
+})//"2023-00-00" route.params.date 글씨 크기 키우고 베이지, 회색
+ 
+ return (
     <View style={styles.container}>
-     <View style={styles.diet}> 
+     <TouchableOpacity style={list[0] ? styles.diet : styles.notExist}
+      onPress={()=>{
+        navigation.navigate("FoodAnalysis",{"diet":diet[0], "date":route.params.date, "mealTime":"아침"});
+      }}> 
       <Text style ={styles.dietText}>아침</Text>
-     </View>
-     <View style={styles.diet}> 
+     </TouchableOpacity>
+
+     <TouchableOpacity style={list[1] ? styles.diet : styles.notExist}
+      onPress={()=>{
+        navigation.navigate("FoodAnalysis",{"diet":diet[1], "date":route.params.date,"mealTime":"점심"});
+      }}> 
       <Text style ={styles.dietText}>점심</Text>
-     </View>
-     <View style={styles.diet}> 
+     </TouchableOpacity>
+
+     <TouchableOpacity style={list[2] ? styles.diet : styles.notExist}
+      onPress={()=>{
+        navigation.navigate("FoodAnalysis",{"diet":diet[2], "date":route.params.date, "mealTime":"저녁"});
+      }}> 
       <Text style ={styles.dietText}>저녁</Text>
-     </View>
-     <View style={styles.diet}> 
+     </TouchableOpacity>
+
+     <TouchableOpacity style={list[3] ? styles.diet : styles.notExist}
+      onPress={()=>{
+        navigation.navigate("FoodAnalysis",{"diet":diet[3], "date":route.params.date, "mealTime":"간식"});
+      }}> 
       <Text style ={styles.dietText}>간식</Text>
-     </View>
+     </TouchableOpacity>  
     </View>
   );
 }
@@ -29,15 +86,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   diet: {
-    backgroundColor: "orange",
+    backgroundColor: "#fefcf6",
+    marginBottom: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 70,
+    borderRadius: 15,
+  },
+  notExist:{
+    backgroundColor: "gray",
     marginBottom: 10,
     paddingVertical: 20,
     paddingHorizontal: 70,
     borderRadius: 15,
   },
   dietText: {
-    color: "white",
-    fontSize: 16,
+    color: "black",
+    fontSize: 24,
     fontWeight: "500",
   },
 });

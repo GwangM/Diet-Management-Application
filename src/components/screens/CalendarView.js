@@ -19,12 +19,7 @@ function CalendarView({navigation}) {
       }}
       onDayPress={(day) => {
         //day.dateString
-        navigation.navigate("DailyList");
-      }}
-      />
-      <Button title="음식 사진"
-      onPress={()=>{
-        navigation.navigate("FoodAnalysis");
+        navigation.navigate("DailyList",{"date":day.dateString});
       }}
       />
       <Button title="현 위치 지도"
