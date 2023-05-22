@@ -167,7 +167,7 @@ export default function FoodAnalysis({navigation, route}) {
   if(info){
     return (//식단 정보를 보여준다.
       <View>
-        <DietInfo></DietInfo>
+        <DietInfo diet = {route.params.diet}></DietInfo>
         </View>
     );
   }

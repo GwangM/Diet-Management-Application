@@ -19,10 +19,13 @@ function DailyList({navigation, route}) {
               console.log(response);//{"diaries": [{"diaryId": 1, "diaryImage": [Object], "foods": [Array], "lat": 37.2429406, "lnt": 127.0677065, "mealTime": "Breakfast", "member": [Object], "writeDate": "2023-05-05"}], "diaryExist": [true, false, false, false]}
               //{"diaries": [], "diaryExist": [false, false, false, false]}
               setList(response.diaryExist);
+              const dietList=response.diaries;
               for (i = 0; i < 4; i++) {
                 if (list[i]){ //순회하며 식단 저장
                   if(i==0){
-
+                    forEach(){ //mealTime이 일치하면 setDiet로 index가 일치하게 할당한다.
+                      
+                    }
                   }
                   else if(i==1){
 
