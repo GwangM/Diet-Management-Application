@@ -23,9 +23,8 @@ function DailyList({navigation, route}) {
               for (i = 0; i < 4; i++) {
                 if (list[i]){ //순회하며 식단 저장
                   if(i==0){
-                    forEach(){ //mealTime이 일치하면 setDiet로 index가 일치하게 할당한다.
-                      
-                    }
+                    //  forEach(){ //mealTime이 일치하면 setDiet로 index가 일치하게 할당한다.
+                    //  }
                   }
                   else if(i==1){
 
