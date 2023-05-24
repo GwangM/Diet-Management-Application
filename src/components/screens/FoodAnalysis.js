@@ -55,7 +55,11 @@ export default function FoodAnalysis({navigation, route}) {
                    })
                   });
                   //result의 length만큼 음식의 개수, result를 순회하며 음식 분석 result[i]
-                  const presentTime = new Date();
+                  let presentTime = new Date();
+                  let file_name=presentTime+"image.jpg"
+                  file_name=file_name.slice(-20)
+                  console.log(file_name)
+                 
                   fetch(address+"/diary/write", {  
                     method: "POST",
                     headers : {
@@ -71,14 +75,15 @@ export default function FoodAnalysis({navigation, route}) {
                       }),
                           }).then(response => response.json()).then(response => {
                             if(response){
-                              RNFetchBlob.fetch('POST', address+"/diary/check?diaryId="+response, {//서버측으로 정보를 보낸다.  
+                              RNFetchBlob.fetch('POST', address+"/diary/image/upload?diaryId="+response, {//서버측으로 정보를 보낸다.  
                                 'Content-Type': 'multipart/form-data',
                                  Authorization: "Bearer "+token
                               }, [
-                                {name: 'diaryImage', filename: presentTime+"image.jpg", data: RNFetchBlob.base64.encode(decodImg) },
+                                {name: 'diaryImage', filename: file_name, data: RNFetchBlob.base64.encode(decodImg) },
                                   ]).then((res) => {})
                              }
                           })
+                          
                           //정보 넣은 다음 리렌더링
       //   RNFetchBlob.fetch('POST', Config.DIET_API_ADDRESS, {
       //   'x-api-key':Config.DIET_API_KEY,  

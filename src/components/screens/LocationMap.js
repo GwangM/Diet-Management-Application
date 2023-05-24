@@ -11,28 +11,31 @@ async function requestPermissions() {
   await PermissionsAndroid.request(
     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
   );
-  if ("granted" === PermissionsAndroid.RESULTS.GRANTED) {
-    Geolocation.getCurrentPosition(
-      position => {
-        const {latitude, longitude} = position.coords;
-        setLocation({
-          latitude,
-          longitude,
-        });
-      },
-      error => {
-        console.log("오류");
-      },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-    );
   }
-  else{
-    navigation.navigate("CalendarView");
-  }
-    }
   useEffect(() => {
-    requestPermissions();
-  }, []);
+    requestPermissions().then(function(){
+      if ("granted" === PermissionsAndroid.RESULTS.GRANTED) {
+        Geolocation.getCurrentPosition(
+          position => {
+            const {latitude, longitude} = position.coords;
+            if (location==undefined){
+            setLocation({
+              latitude,
+              longitude,
+            });}
+          },
+          error => {
+            console.log("오류");
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      }
+      else{
+        navigation.navigate("CalendarView");
+      }
+  })
+    console.log(location)
+  }, [location]);
   return (
     <View
   style={{

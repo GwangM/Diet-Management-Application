@@ -7,6 +7,7 @@ function DailyList({navigation, route}) {
   const token=useSelector(state => state.user.accessToken);
   const [diet, setDiet] = useState([false,false,false,false]);//object 형식으로("아침":식단) 저장한다.
   const [list,setList]=useState([false, false, false, false]);
+  const[image,setImage]=useState([false,false,false,false]);
   useEffect(()=>{
 
     fetch(address+"/diary/check-read?date="+route.params.date, {  
@@ -18,22 +19,182 @@ function DailyList({navigation, route}) {
             if(response){
               console.log(response);//{"diaries": [{"diaryId": 1, "diaryImage": [Object], "foods": [Array], "lat": 37.2429406, "lnt": 127.0677065, "mealTime": "Breakfast", "member": [Object], "writeDate": "2023-05-05"}], "diaryExist": [true, false, false, false]}
               //{"diaries": [], "diaryExist": [false, false, false, false]}
-              setList(response.diaryExist);
+              
+              if((list.every((value, idx) => value === response.diaryExist[idx]))==false){
+                setList(response.diaryExist);}
               const dietList=response.diaries;
-              for (i = 0; i < 4; i++) {
+              console.log(list[0])
+              console.log(dietList)
+              for (let i = 0; i < 4; i++) {
                 if (list[i]){ //순회하며 식단 저장
+                  var vtt_data=""
                   if(i==0){
-                    //  forEach(){ //mealTime이 일치하면 setDiet로 index가 일치하게 할당한다.
-                    //  }
-                  }
-                  else if(i==1){
+                    dietList.forEach(function(diets){ //mealTime이 일치하면 setDiet로 index가 일치하게 할당한다.
+                        if (diets.mealTime=="Breakfast")
+                          console.log("실행")
+                          var newDiet = [...diet];
+                          
+                          fetch(address+"/diary/image/read?fileUrl="+diets.fileUrl, {  
+                            method: "GET",
+                            headers : {
+                              Authorization: "Bearer "+token,
+                              "content-type":"image/jpeg"
+                              }
+                                  }).then(function (response) {
+                                    if (response.ok) {
+                                        console.log("get 성공");
+                                        return response.blob(); 
+                                    } else {
+                                        alert('네트워크 오류');
+                                    }
+                                })
+                                .then(function (blob) {
 
+                                  var tempBlob = new Blob([blob], {
+                                    type: "text/vtt; charset=utf-8"
+                                });
+                                
+                                const fileReaderInstance = new FileReader();
+                                fileReaderInstance.readAsDataURL(tempBlob);
+                                fileReaderInstance.onload = () => {
+                                    base64 = fileReaderInstance.result;
+                                    vtt_data = base64;
+                                } //base64를 이미지로 띄운다.                                
+                                console.log("여기까지")    
+                                console.log(diets);
+                                let strArr = Object.values(diets);
+                                console.log(strArr)
+                                strArr.push(vtt_data)
+                                newDiet[i] = strArr;
+                                setDiet(newDiet);
+                              })                                  
+                  })
+                }
+                  else if(i==1){
+                    dietList.forEach(function(diets){ //mealTime이 일치하면 setDiet로 index가 일치하게 할당한다.
+                      if (diets.mealTime=="Breakfast")
+                        console.log("실행")
+                        var newDiet = [...diet];
+                        
+                        fetch(address+"/diary/image/read?fileUrl="+diets.fileUrl, {  
+                          method: "GET",
+                          headers : {
+                            Authorization: "Bearer "+token,
+                            "content-type":"image/jpeg"
+                            }
+                                }).then(function (response) {
+                                  if (response.ok) {
+                                      console.log("get 성공");
+                                      return response.blob(); 
+                                  } else {
+                                      alert('네트워크 오류');
+                                  }
+                              })
+                              .then(function (blob) {
+
+                                var tempBlob = new Blob([blob], {
+                                  type: "text/vtt; charset=utf-8"
+                              });
+                              
+                              const fileReaderInstance = new FileReader();
+                              fileReaderInstance.readAsDataURL(tempBlob);
+                              fileReaderInstance.onload = () => {
+                                  base64 = fileReaderInstance.result;
+                                  vtt_data = base64;
+                              } //base64를 이미지로 띄운다.                                
+                              console.log("여기까지")    
+                              console.log(diets);
+                              let strArr = Object.values(diets);
+                              console.log(strArr)
+                              strArr.push(vtt_data)
+                              newDiet[i] = strArr;
+                              setDiet(newDiet);
+                            })                                  
+                })
                   }
                   else if(i==2){
+                    dietList.forEach(function(diets){ //mealTime이 일치하면 setDiet로 index가 일치하게 할당한다.
+                      if (diets.mealTime=="Breakfast")
+                        console.log("실행")
+                        var newDiet = [...diet];
+                        
+                        fetch(address+"/diary/image/read?fileUrl="+diets.fileUrl, {  
+                          method: "GET",
+                          headers : {
+                            Authorization: "Bearer "+token,
+                            "content-type":"image/jpeg"
+                            }
+                                }).then(function (response) {
+                                  if (response.ok) {
+                                      console.log("get 성공");
+                                      return response.blob(); 
+                                  } else {
+                                      alert('네트워크 오류');
+                                  }
+                              })
+                              .then(function (blob) {
 
+                                var tempBlob = new Blob([blob], {
+                                  type: "text/vtt; charset=utf-8"
+                              });
+                              
+                              const fileReaderInstance = new FileReader();
+                              fileReaderInstance.readAsDataURL(tempBlob);
+                              fileReaderInstance.onload = () => {
+                                  base64 = fileReaderInstance.result;
+                                  vtt_data = base64;
+                              } //base64를 이미지로 띄운다.                                
+                              console.log("여기까지")    
+                              console.log(diets);
+                              let strArr = Object.values(diets);
+                              console.log(strArr)
+                              strArr.push(vtt_data)
+                              newDiet[i] = strArr;
+                              setDiet(newDiet);
+                            })                                  
+                })
                   }
                   else{
+                    dietList.forEach(function(diets){ //mealTime이 일치하면 setDiet로 index가 일치하게 할당한다.
+                      if (diets.mealTime=="Breakfast")
+                        console.log("실행")
+                        var newDiet = [...diet];
+                        
+                        fetch(address+"/diary/image/read?fileUrl="+diets.fileUrl, {  
+                          method: "GET",
+                          headers : {
+                            Authorization: "Bearer "+token,
+                            "content-type":"image/jpeg"
+                            }
+                                }).then(function (response) {
+                                  if (response.ok) {
+                                      console.log("get 성공");
+                                      return response.blob(); 
+                                  } else {
+                                      alert('네트워크 오류');
+                                  }
+                              })
+                              .then(function (blob) {
 
+                                var tempBlob = new Blob([blob], {
+                                  type: "text/vtt; charset=utf-8"
+                              });
+                              
+                              const fileReaderInstance = new FileReader();
+                              fileReaderInstance.readAsDataURL(tempBlob);
+                              fileReaderInstance.onload = () => {
+                                  base64 = fileReaderInstance.result;
+                                  vtt_data = base64;
+                              } //base64를 이미지로 띄운다.                                
+                              console.log("여기까지")    
+                              console.log(diets);
+                              let strArr = Object.values(diets);
+                              console.log(strArr)
+                              strArr.push(vtt_data)
+                              newDiet[i] = strArr;
+                              setDiet(newDiet);
+                            })                                  
+                })
                   }
                 }
               } 
@@ -46,7 +207,7 @@ function DailyList({navigation, route}) {
           //   } else {
           //       console.log('오류');
           //   }
-},[])//"2023-00-00" route.params.date 글씨 크기 키우고 베이지, 회색
+},[list])//"2023-00-00" route.params.date 글씨 크기 키우고 베이지, 회색
  
  return (
     <View style={styles.container}>
@@ -54,6 +215,7 @@ function DailyList({navigation, route}) {
       onPress={()=>{
         navigation.navigate("FoodAnalysis",{"diet":diet[0], "date":route.params.date, "mealTime":"아침"});
       }}> 
+      {/* Error: Objects are not valid as a React child (found: object with keys {name, calories, weight, tan, dan, ji, na}). If you meant to render a collection of children, use an array instead. */}
       <Text style ={styles.dietText}>아침</Text>
      </TouchableOpacity>
 
