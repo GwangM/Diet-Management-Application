@@ -55,11 +55,8 @@ export default function FoodAnalysis({navigation, route}) {
                    })
                   });
                   //result의 length만큼 음식의 개수, result를 순회하며 음식 분석 result[i]
-                  let presentTime = new Date();
-                  let file_name=presentTime+"image.jpg"
-                  file_name=file_name.slice(-20)
-                  console.log(file_name)
-                 
+                  let file_name="image.jpg"
+ 
                   fetch(address+"/diary/write", {  
                     method: "POST",
                     headers : {
@@ -155,10 +152,11 @@ export default function FoodAnalysis({navigation, route}) {
         Geolocation.getCurrentPosition(
           position => {
             const {latitude, longitude} = position.coords;
-            setLocation({
+
+            if(location==undefined){setLocation({
               latitude,
               longitude,
-            });
+            });}
           },
           error => {
             console.log("오류");

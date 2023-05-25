@@ -3,10 +3,19 @@ import {View,StyleSheet,Platform,PermissionsAndroid}from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { windowHeight,windowWidth } from '../../util/WH';
 import Config from 'react-native-config';
+import InfoModal from './InfoModal';
 import NaverMapView, {Circle, Marker, Path, Polyline, Polygon} from "react-native-nmap";
+import {useSelector} from "react-redux";
 
 export default function LocationMap({navigation}){
+  const address = useSelector((state) => state.user.address);
+  const token=useSelector(state => state.user.accessToken);
   const [location, setLocation] = useState(undefined);
+  const [info,setInfo]=useState(undefined);
+  const[markerList,setMarkerList]=useState([]);
+  const[infoList,setInfoList]=useState([]);
+  const[modalVisible,setModalVisible]=useState([]);
+
 async function requestPermissions() {
   await PermissionsAndroid.request(
     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -29,13 +38,66 @@ async function requestPermissions() {
           },
           {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
-      }
-      else{
-        navigation.navigate("CalendarView");
-      }
+        //이미 넣어둔 음식 정보를 위도, 경도 이용하여 가져오기
+        if (location!=undefined){
+        fetch(address+"/diary/search/near-loc?lat="+location.latitude+"&lnt="+location.longitude, {  
+          method: "GET",
+          headers : {
+            Authorization: "Bearer "+token
+            }
+                }).then(response => response.json()).then(response => {
+                  if(response){
+                  console.log(response)//{"diaryId": 1, "fileUrl": "/Users/chandle/f-Dairy-Server/src/main/resources/static/diaryImage/testImage.jpg", "foods": [{"calories": "81.82", "dan": "1.73", "foodId": 1, "ji": "2.27", "na": "283.49", "name": "라면", "tan": "13.65", "weight": "550.0"}], "lat": null, "lnt": null, "mealTime": "Breakfast", "memberId": null, "writeDate": "2023-05-05"}
+                  if(info==undefined){
+                  setInfo(response)}
+                  if(info){
+                    let markers=new Array();
+                    let infoModals=new Array();  
+                    let tempVisible=new Array();
+                    info.forEach(function(element){
+                    if(element.lat){
+                    markers.push([element.lat,element.lnt])
+                    infoModals.push(element)
+                    tempVisible.push(false);
+                  }
+                   })
+                  setInfoList(infoModals)
+                  setMarkerList(markers) 
+                  setModalVisible(tempVisible);
+                }
+        }
+      })
+    }}
   })
     console.log(location)
-  }, [location]);
+  }, [location,info]);
+
+  function findIndex(arr, target) {
+    return arr.findIndex(subArray =>
+      subArray.every((value, index) => value === target[index])
+    );
+  }
+
+  const modalOpen = (lat,lnt) => {
+    let idx=findIndex(markerList,[lat,lnt]);
+    if(idx!=-1&&(markerList.length===modalVisible.length)){
+    let newModal=[...modalVisible]//구조분해한 다음 해당하는 idx만 true로 바꿔준다.
+    newModal[idx]=true;
+    setModalVisible(newModal); // visible = true
+  }}
+
+  function getClickHandler(seq){
+    return function(e){
+
+    }
+
+  }
+
+  // for(let i=0;i<markers.length;i++){
+  //   console.log(markers[i],getClickHandler(i));
+  //   naver.maps.Event.addListener(markers[i],'click',getClickHandler(i));
+  // }
+
   return (
     <View
   style={{
@@ -49,7 +111,7 @@ async function requestPermissions() {
     style={{ width: "100%", height: "100%" }}
     zoomControl={false}
     center={{
-      zoom: 10,
+      zoom: 15,
       tilt: 50,
       latitude: location.latitude,
       longitude: location.longitude,
@@ -62,28 +124,36 @@ async function requestPermissions() {
       }}
       pinColor="blue"
     />
+    {markerList.map((marker,index) => 
+        <Marker
+          key={marker}
+          coordinate={{
+            latitude: marker[0],
+            longitude: marker[1],
+          }}
+          onClick={() => {
+            console.log(marker);
+            modalOpen(marker[0],marker[1]);
+          }}
+        />        
+      )}
+
+      {(modalVisible.length===markerList.length) && (markerList.map((marker, index) => (
+         <InfoModal
+          key={index}
+          visible={modalVisible[index]} 
+          onClose={() => {
+            var newModal=[...modalVisible]
+            if(index<newModal.length)
+              newModal[index]=false;
+            setModalVisible(newModal); 
+          }}
+          location={marker}
+          info={JSON.stringify(infoList[index])}
+          />
+          )) )}  
   </NaverMapView>)}
 </View>
-    // <View style={styles.container}>
-    //   {location && (
-    //     <MapView
-    //       style={{flex: 1,width: windowWidth, height: windowHeight}}
-    //       initialRegion={{
-    //         latitude: location.latitude,
-    //         longitude: location.longitude,
-    //         latitudeDelta: 0.00422,
-    //         longitudeDelta: 0.00422,
-    //       }}>
-          
-    //       <Marker
-    //         coordinate={{
-    //           latitude: location.latitude,
-    //           longitude: location.longitude,
-    //         }}
-    //       />
-    //     </MapView>  
-    //   )}
-    // </View>
   );
 };
 

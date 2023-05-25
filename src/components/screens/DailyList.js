@@ -213,7 +213,11 @@ function DailyList({navigation, route}) {
     <View style={styles.container}>
      <TouchableOpacity style={list[0] ? styles.diet : styles.notExist}
       onPress={()=>{
-        navigation.navigate("FoodAnalysis",{"diet":diet[0], "date":route.params.date, "mealTime":"아침"});
+        let inputDiet=false;
+        if(diet[0]){
+          inputDiet=JSON.stringify(diet[0])
+          }
+        navigation.navigate("FoodAnalysis",{"diet":inputDiet, "date":route.params.date, "mealTime":"아침"});
       }}> 
       {/* Error: Objects are not valid as a React child (found: object with keys {name, calories, weight, tan, dan, ji, na}). If you meant to render a collection of children, use an array instead. */}
       <Text style ={styles.dietText}>아침</Text>
@@ -221,21 +225,33 @@ function DailyList({navigation, route}) {
 
      <TouchableOpacity style={list[1] ? styles.diet : styles.notExist}
       onPress={()=>{
-        navigation.navigate("FoodAnalysis",{"diet":diet[1], "date":route.params.date,"mealTime":"점심"});
+        let inputDiet=false;
+        if(diet[1]){
+          inputDiet=JSON.stringify(diet[1])
+          }
+        navigation.navigate("FoodAnalysis",{"diet":inputDiet, "date":route.params.date,"mealTime":"점심"});
       }}> 
       <Text style ={styles.dietText}>점심</Text>
      </TouchableOpacity>
 
      <TouchableOpacity style={list[2] ? styles.diet : styles.notExist}
       onPress={()=>{
-        navigation.navigate("FoodAnalysis",{"diet":diet[2], "date":route.params.date, "mealTime":"저녁"});
+        let inputDiet=false;
+        if(diet[2]){
+          inputDiet=JSON.stringify(diet[2])
+          }
+        navigation.navigate("FoodAnalysis",{"diet":inputDiet, "date":route.params.date, "mealTime":"저녁"});
       }}> 
       <Text style ={styles.dietText}>저녁</Text>
      </TouchableOpacity>
 
      <TouchableOpacity style={list[3] ? styles.diet : styles.notExist}
       onPress={()=>{
-        navigation.navigate("FoodAnalysis",{"diet":diet[3], "date":route.params.date, "mealTime":"간식"});
+        let inputDiet=false;
+        if(diet[3]){
+          inputDiet=JSON.stringify(diet[3])
+          }
+        navigation.navigate("FoodAnalysis",{"diet":inputDiet, "date":route.params.date, "mealTime":"간식"});
       }}> 
       <Text style ={styles.dietText}>간식</Text>
      </TouchableOpacity>  
