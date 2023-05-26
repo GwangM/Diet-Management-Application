@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {View,StyleSheet,Platform,PermissionsAndroid}from 'react-native';
+import {Button,TextInput,View,StyleSheet,Platform,PermissionsAndroid}from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { windowHeight,windowWidth } from '../../util/WH';
 import Config from 'react-native-config';
 import InfoModal from './InfoModal';
 import NaverMapView, {Circle, Marker, Path, Polyline, Polygon} from "react-native-nmap";
 import {useSelector} from "react-redux";
+import axios from 'axios';
+import proj4 from 'proj4';
 
 export default function LocationMap({navigation}){
   const address = useSelector((state) => state.user.address);
@@ -15,6 +17,32 @@ export default function LocationMap({navigation}){
   const[markerList,setMarkerList]=useState([]);
   const[infoList,setInfoList]=useState([]);
   const[modalVisible,setModalVisible]=useState([]);
+  const[searchTerm, setSearchTerm]=useState('');
+  const[searchResults,setSearchResults]=useState([]);
+  const[position,setPosition]=useState("");
+
+
+  const search= async()=>{
+    try{
+      const { data } = await axios.get('https://openapi.naver.com/v1/search/local', {
+        params: { query: searchTerm },
+        headers: {
+          'X-Naver-Client-Id': Config.NAVER_CLIENT_ID,
+          'X-Naver-Client-Secret': Config.NAVER_CLIENT_SECRET
+        },
+      });
+    
+      const [lati, longi] = katecToWgs84(parseInt(data.items.mapx), parseInt(data.items.mapy));
+      data.items['latitude']=lati+'';
+      data.items['longitude']=longi+'';
+      console.log(data.items,"실행");
+      setSearchResults(data.items);
+      setPosition([lati,longi]);
+      console.log(position)
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
 async function requestPermissions() {
   await PermissionsAndroid.request(
@@ -72,6 +100,15 @@ async function requestPermissions() {
     console.log(location)
   }, [location,info]);
 
+  
+  const katec = '+proj=tmerc +lat_0=38 +lon_0=128 +k=0.9999 +x_0=500000 +y_0=200000 +ellps=bessel +units=m +no_defs +towgs84=-115.8,-474.99,674.11,1.16,-2.31,-1.63,6.43';
+const wgs84 = 'EPSG:4326';
+
+function katecToWgs84(x, y) {
+  const [lon, lat] = proj4(katec, wgs84, [x, y]);
+  return [lat, lon];
+}
+
   function findIndex(arr, target) {
     return arr.findIndex(subArray =>
       subArray.every((value, index) => value === target[index])
@@ -106,6 +143,9 @@ async function requestPermissions() {
     marginTop: 10,
   }}
 >
+  <TextInput value={searchTerm} onChangeText={setSearchTerm} style={{height:40,borderColor:'gray',borderWidth:1}}
+  placeholder='지역 검색'/>
+  <Button title='Search' onPress={search}/>
 {location && (
   <NaverMapView
     style={{ width: "100%", height: "100%" }}
@@ -151,7 +191,15 @@ async function requestPermissions() {
           location={marker}
           info={JSON.stringify(infoList[index])}
           />
-          )) )}  
+          )) )}
+          {searchResults.map((result, index) => (
+          <Marker
+            key={index}
+            coordinate={{ latitude: result.latitude, longitude: result.longitude }}
+            caption={{ text: result.title }}
+            pinColor="red"
+          />
+        ))}  
   </NaverMapView>)}
 </View>
   );

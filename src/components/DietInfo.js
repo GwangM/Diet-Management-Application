@@ -57,3 +57,47 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
     },
   });
+
+  //aaa
+//   import React from 'react';
+// import { View, Text, Image, StyleSheet } from 'react-native';
+
+// const FoodCard = ({ base64Image, name, calories, carbs }) => (
+//   <View style={styles.card}>
+//     <Image source={{ uri: `data:image/png;base64,${base64Image}` }} style={styles.image} />
+//     <View style={styles.infoContainer}>
+//       <Text style={styles.title}>{name}</Text>
+//       <Text style={styles.info}>Calories: {calories}</Text>
+//       <Text style={styles.info}>Carbohydrates: {carbs}g</Text>
+//     </View>
+//   </View>
+// );
+
+// const styles = StyleSheet.create({
+//   card: {
+//     borderWidth: 1,
+//     borderColor: '#ccc',
+//     borderRadius: 10,
+//     overflow: 'hidden',
+//     marginBottom: 10,
+//     elevation: 2,
+//   },
+//   image: {
+//     width: '100%',
+//     height: 200,
+//   },
+//   infoContainer: {
+//     padding: 20,
+//   },
+//   title: {
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//     marginBottom: 10,
+//   },
+//   info: {
+//     fontSize: 16,
+//     marginBottom: 5,
+//   },
+// });
+
+// export default FoodCard;
