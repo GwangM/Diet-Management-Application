@@ -31,14 +31,14 @@ export default function LocationMap({navigation}){
           'X-Naver-Client-Secret': Config.NAVER_CLIENT_SECRET
         },
       });
-    
-      const [lati, longi] = katecToWgs84(parseInt(data.items.mapx), parseInt(data.items.mapy));
-      data.items['latitude']=lati+'';
-      data.items['longitude']=longi+'';
-      console.log(data.items,"실행");
-      setSearchResults(data.items);
+      const [lati, longi] = katecToWgs84(parseInt(data.items[0].mapx), parseInt(data.items[0].mapy));
+      console.log(lati,longi,"위경도");
       setPosition([lati,longi]);
-      console.log(position)
+      console.log(position,"position");
+      data.items[0]['latitude']=lati+'';
+      data.items[0]['longitude']=longi+'';
+      console.log("결과",Object.entries(data.items[0]));
+      setSearchResults(Object.entries(data.items[0]));
     } catch (error) {
       console.error(error);
     }
@@ -98,7 +98,7 @@ async function requestPermissions() {
     }}
   })
     console.log(location)
-  }, [location,info]);
+  }, [location,info,position]);
 
   
   const katec = '+proj=tmerc +lat_0=38 +lon_0=128 +k=0.9999 +x_0=500000 +y_0=200000 +ellps=bessel +units=m +no_defs +towgs84=-115.8,-474.99,674.11,1.16,-2.31,-1.63,6.43';
@@ -192,11 +192,11 @@ function katecToWgs84(x, y) {
           info={JSON.stringify(infoList[index])}
           />
           )) )}
-          {searchResults.map((result, index) => (
+          {searchResults && searchResults.map((result, index) => (
           <Marker
             key={index}
-            coordinate={{ latitude: result.latitude, longitude: result.longitude }}
-            caption={{ text: result.title }}
+            coordinate={{ latitude: position[0], longitude: position[1]}}
+            // caption={{ text: result.title }}
             pinColor="red"
           />
         ))}  

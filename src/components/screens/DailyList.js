@@ -8,6 +8,7 @@ function DailyList({navigation, route}) {
   const [diet, setDiet] = useState([false,false,false,false]);//object 형식으로("아침":식단) 저장한다.
   const [list,setList]=useState([false, false, false, false]);
   const[image,setImage]=useState([false,false,false,false]);
+  
   useEffect(()=>{
 
     fetch(address+"/diary/check-read?date="+route.params.date, {  
@@ -26,7 +27,7 @@ function DailyList({navigation, route}) {
               console.log(list[0])
               console.log(dietList)
               for (let i = 0; i < 4; i++) {
-                if (list[i]){ //순회하며 식단 저장
+                if (list[i] && diet[i]==false){ //순회하며 식단 저장
                   var vtt_data=""
                   if(i==0){
                     dietList.forEach(function(diets){ //mealTime이 일치하면 setDiet로 index가 일치하게 할당한다.
