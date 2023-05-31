@@ -20,7 +20,7 @@ export default function LocationMap({navigation}){
   const[searchTerm, setSearchTerm]=useState('');
   const[searchResults,setSearchResults]=useState([]);
   const[position,setPosition]=useState("");
-
+  const[region,setRegion]=useState(undefined);
 
   const search= async()=>{
     try{
@@ -31,16 +31,46 @@ export default function LocationMap({navigation}){
           'X-Naver-Client-Secret': Config.NAVER_CLIENT_SECRET
         },
       });
-      const [lati, longi] = katecToWgs84(parseInt(data.items[0].mapx), parseInt(data.items[0].mapy));
-      console.log(lati,longi,"위경도");
-      setPosition([lati,longi]);
-      console.log(position,"position");
-      data.items[0]['latitude']=lati+'';
-      data.items[0]['longitude']=longi+'';
+
+      getLatLngFromAddress(address)
+    .then(({ lat, lng }) => {
+    console.log('위도:', lat);
+    console.log('경도:', lng);
+    setPosition([lat,lng]);
+    console.log(position,"position");
+  })
+  .catch(error => {
+    console.error('에러:', error);
+    });
+      
       console.log("결과",Object.entries(data.items[0]));
       setSearchResults(Object.entries(data.items[0]));
     } catch (error) {
       console.error(error);
+    }
+    
+  
+  }
+
+  async function getAreaFromLatLng(latitude, longitude) {
+    const apiKey = Config.API_PLACES_KEY;
+  
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
+    );
+    const data = await response.json();
+  
+    if (data.status === 'OK') {
+      const addressComponents = data.results[0].address_components;
+      const area = addressComponents.find(component => component.types.includes('locality'));
+      
+      if (area) {
+        return area.long_name;
+      } else {
+        throw new Error('Area not found');
+      }
+    } else {
+      throw new Error('Reverse geocoding failed');
     }
   }
 
@@ -98,16 +128,18 @@ async function requestPermissions() {
     }}
   })
     console.log(location)
+    if(location!=undefined && region===undefined){
+    getAreaFromLatLng(location.latitude, location.longitude)
+    .then(area => {
+    console.log('지역명:', area);
+    setRegion(area);
+    })
+    .catch(error => {
+    console.error('에러:', error);
+    });
+    }
   }, [location,info,position]);
 
-  
-  const katec = '+proj=tmerc +lat_0=38 +lon_0=128 +k=0.9999 +x_0=500000 +y_0=200000 +ellps=bessel +units=m +no_defs +towgs84=-115.8,-474.99,674.11,1.16,-2.31,-1.63,6.43';
-const wgs84 = 'EPSG:4326';
-
-function katecToWgs84(x, y) {
-  const [lon, lat] = proj4(katec, wgs84, [x, y]);
-  return [lat, lon];
-}
 
   function findIndex(arr, target) {
     return arr.findIndex(subArray =>
@@ -130,10 +162,21 @@ function katecToWgs84(x, y) {
 
   }
 
-  // for(let i=0;i<markers.length;i++){
-  //   console.log(markers[i],getClickHandler(i));
-  //   naver.maps.Event.addListener(markers[i],'click',getClickHandler(i));
-  // }
+  async function getLatLngFromAddress(address) {
+    const apiKey = Config.API_PLACES_KEY;
+  
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`
+    );
+    const data = await response.json();
+  
+    if (data.status === 'OK') {
+      const { lat, lng } = data.results[0].geometry.location;
+      return { lat, lng };
+    } else {
+      throw new Error('Geocoding failed');
+    }
+  }
 
   return (
     <View
@@ -143,7 +186,7 @@ function katecToWgs84(x, y) {
     marginTop: 10,
   }}
 >
-  <TextInput value={searchTerm} onChangeText={setSearchTerm} style={{height:40,borderColor:'gray',borderWidth:1}}
+  <TextInput value={searchTerm+region} onChangeText={setSearchTerm} style={{height:40,borderColor:'gray',borderWidth:1}}
   placeholder='지역 검색'/>
   <Button title='Search' onPress={search}/>
 {location && (
@@ -196,7 +239,7 @@ function katecToWgs84(x, y) {
           <Marker
             key={index}
             coordinate={{ latitude: position[0], longitude: position[1]}}
-            // caption={{ text: result.title }}
+            // caption={{ text: result.title }} position을 주소로부터 가져오고, 검색어에 현재 지역을 붙인다.
             pinColor="red"
           />
         ))}  

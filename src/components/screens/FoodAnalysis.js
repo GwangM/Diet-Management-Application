@@ -91,6 +91,8 @@ export default function FoodAnalysis({navigation, route}) {
           .catch((err) => {
               console.log(err, "에러");
           })
+          setModalVisible(false);
+          navigation.navigate("DailyList",{"date": route.params.date}); //음식 정보를 넣으면 DailyList로 돌아간다.
   } 
 
   // 카메라 촬영
