@@ -25,13 +25,13 @@ export default function LocationMap({navigation}){
   const search= async()=>{
     try{
       const { data } = await axios.get('https://openapi.naver.com/v1/search/local', {
-        params: { query: searchTerm },
+        params: { query: searchTerm+region },
         headers: {
           'X-Naver-Client-Id': Config.NAVER_CLIENT_ID,
           'X-Naver-Client-Secret': Config.NAVER_CLIENT_SECRET
         },
       });
-
+      console.log(searchTerm+region,"검색");
       getLatLngFromAddress(address)
     .then(({ lat, lng }) => {
     console.log('위도:', lat);
@@ -54,12 +54,12 @@ export default function LocationMap({navigation}){
 
   async function getAreaFromLatLng(latitude, longitude) {
     const apiKey = Config.API_PLACES_KEY;
-  
+    console.log(apiKey);
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
     );
     const data = await response.json();
-  
+    console.log(data);
     if (data.status === 'OK') {
       const addressComponents = data.results[0].address_components;
       const area = addressComponents.find(component => component.types.includes('locality'));
@@ -126,7 +126,7 @@ async function requestPermissions() {
         }
       })
     }}
-  })
+  }).then(function(){
     console.log(location)
     if(location!=undefined && region===undefined){
     getAreaFromLatLng(location.latitude, location.longitude)
@@ -138,6 +138,7 @@ async function requestPermissions() {
     console.error('에러:', error);
     });
     }
+  })
   }, [location,info,position]);
 
 
@@ -186,7 +187,7 @@ async function requestPermissions() {
     marginTop: 10,
   }}
 >
-  <TextInput value={searchTerm+region} onChangeText={setSearchTerm} style={{height:40,borderColor:'gray',borderWidth:1}}
+  <TextInput value={searchTerm} onChangeText={setSearchTerm} style={{height:40,borderColor:'gray',borderWidth:1}}
   placeholder='지역 검색'/>
   <Button title='Search' onPress={search}/>
 {location && (
