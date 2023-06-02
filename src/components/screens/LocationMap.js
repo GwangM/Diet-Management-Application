@@ -1,13 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useRef} from 'react';
 import {Button,TextInput,View,StyleSheet,Platform,PermissionsAndroid}from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { windowHeight,windowWidth } from '../../util/WH';
 import Config from 'react-native-config';
 import InfoModal from './InfoModal';
-import NaverMapView, {Circle, Marker, Path, Polyline, Polygon} from "react-native-nmap";
+import NaverMapView, {Marker} from "react-native-nmap";
 import {useSelector} from "react-redux";
 import axios from 'axios';
-import proj4 from 'proj4';
 
 export default function LocationMap({navigation}){
   const address = useSelector((state) => state.user.address);
@@ -18,9 +17,10 @@ export default function LocationMap({navigation}){
   const[infoList,setInfoList]=useState([]);
   const[modalVisible,setModalVisible]=useState([]);
   const[searchTerm, setSearchTerm]=useState('');
-  const[searchResults,setSearchResults]=useState([]);
+  const[searchResults,setSearchResults]=useState(undefined);
   const[position,setPosition]=useState("");
   const[region,setRegion]=useState(undefined);
+  const overlayRef = useRef(null);
 
   const search= async()=>{
     try{
@@ -32,19 +32,24 @@ export default function LocationMap({navigation}){
         },
       });
       console.log(searchTerm+region,"검색");
-      getLatLngFromAddress(address)
+    console.log(data);
+    getLatLngFromAddress(data.items[0].address)
     .then(({ lat, lng }) => {
-    console.log('위도:', lat);
-    console.log('경도:', lng);
-    setPosition([lat,lng]);
-    console.log(position,"position");
+      if(position===""){
+      setPosition([lat,lng]);
+    }
+      return [lat,lng];
   })
-  .catch(error => {
-    console.error('에러:', error);
-    });
+  .then(pos =>{
+    console.log("결과",Object.entries(data.items[0]));//[["title", "<b>파리바게뜨</b> 용인서천마을점"], ["link", ""], ["category", "카페,디저트>베이커리"], ["description", ""], ["telephone", ""], ["address", " 
+    // 경기도 용인시 기흥구 서천동 813"], ["roadAddress", "경기도 용인시 기흥구 서천로 121"], ["mapx", "317925"], ["mapy", "515459"]]
+    if(position!=""){
+    setSearchResults(data.items[0]);
+    console.log("setresult")
+  }
+  })    
       
-      console.log("결과",Object.entries(data.items[0]));
-      setSearchResults(Object.entries(data.items[0]));
+     
     } catch (error) {
       console.error(error);
     }
@@ -54,18 +59,16 @@ export default function LocationMap({navigation}){
 
   async function getAreaFromLatLng(latitude, longitude) {
     const apiKey = Config.API_PLACES_KEY;
-    console.log(apiKey);
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}&language=ko`
     );
     const data = await response.json();
-    console.log(data);
     if (data.status === 'OK') {
-      const addressComponents = data.results[0].address_components;
-      const area = addressComponents.find(component => component.types.includes('locality'));
-      
+      console.log(data);
+      const addressArr = data.results[0].formatted_address.split(' ',);
+      const area=' '+addressArr[2]+' '+addressArr[3];
       if (area) {
-        return area.long_name;
+        return area;
       } else {
         throw new Error('Area not found');
       }
@@ -127,7 +130,6 @@ async function requestPermissions() {
       })
     }}
   }).then(function(){
-    console.log(location)
     if(location!=undefined && region===undefined){
     getAreaFromLatLng(location.latitude, location.longitude)
     .then(area => {
@@ -139,6 +141,10 @@ async function requestPermissions() {
     });
     }
   })
+  if (overlayRef.current) {
+    // 정보창 보이기
+    overlayRef.current.show();
+  }
   }, [location,info,position]);
 
 
@@ -236,14 +242,24 @@ async function requestPermissions() {
           info={JSON.stringify(infoList[index])}
           />
           )) )}
-          {searchResults && searchResults.map((result, index) => (
+          {searchResults && (
+          <>
           <Marker
-            key={index}
             coordinate={{ latitude: position[0], longitude: position[1]}}
-            // caption={{ text: result.title }} position을 주소로부터 가져오고, 검색어에 현재 지역을 붙인다.
+            caption={{ text: searchResults.title }} //position을 주소로부터 가져오고, 검색어에 현재 지역을 붙인다.
             pinColor="red"
+            onClick={() => {
+            if (overlayRef.current) {
+              // 정보창 보이기
+              overlayRef.current.show();
+            }
+          }}
           />
-        ))}  
+        <View style={styles.infoWindow} ref={overlayRef}>
+        <Text>정보창</Text>
+        </View>
+       </>
+       )}  
   </NaverMapView>)}
 </View>
   );
@@ -255,6 +271,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#9DD84B",
     alignItems: "center",
     justifyContent: "center",
+  },
+  infoWindow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 200,
+    height: 100,
+    backgroundColor: 'white',
+    padding: 10,
   },
 }
 )
