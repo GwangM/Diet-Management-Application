@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react";
 import { ScrollView, StyleSheet,View,Text,Button,TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
 
 function DailyList({navigation, route}) {
   const address = useSelector((state) => state.user.address);
@@ -8,7 +9,8 @@ function DailyList({navigation, route}) {
   const [diet, setDiet] = useState([false,false,false,false]);//object 형식으로("아침":식단) 저장한다.
   const [list,setList]=useState([false, false, false, false]);
   const[image,setImage]=useState([false,false,false,false]);
-  
+  const isFocused = useIsFocused();
+
   useEffect(()=>{
 
     fetch(address+"/diary/check-read?date="+route.params.date, {  
@@ -76,7 +78,7 @@ function DailyList({navigation, route}) {
           //   } else {
           //       console.log('오류');
           //   }
-},[list])//"2023-00-00" route.params.date 글씨 크기 키우고 베이지, 회색
+},[list,isFocused])//"2023-00-00" route.params.date 글씨 크기 키우고 베이지, 회색
  
  return (
     <View style={styles.container}>

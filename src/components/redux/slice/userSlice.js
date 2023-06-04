@@ -5,7 +5,7 @@ const initialState = {
   name: "",
   email: "",
   accessToken: "",
-  address: "https://880f-2001-e60-d501-6810-308b-d32f-92ec-f57a.ngrok-free.app",
+  address: "https://f925-2001-e60-d503-fa06-3539-a733-4693-18e8.ngrok-free.app",
   isLogin: false,
   loginType: "",
   searchType: "",
@@ -40,7 +40,7 @@ const userSlice = createSlice({
       state.email = "";
       state.name = "";
       state.accessToken = "";
-      state.address = "https://880f-2001-e60-d501-6810-308b-d32f-92ec-f57a.ngrok-free.app";
+      state.address = "https://f925-2001-e60-d503-fa06-3539-a733-4693-18e8.ngrok-free.app";
       state.isLogin = false;
       state.loginType = "";
       state.searchType = null;

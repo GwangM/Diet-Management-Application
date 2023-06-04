@@ -1,5 +1,6 @@
 import React,{useEffect} from "react";
 import { StyleSheet,View,Text,Image,ScrollView } from "react-native";
+import { useSelector } from "react-redux";
 
 function DietInfo({diet}) {
 //{"diaries": [{"diaryId": 1, "diaryImage": [Object], "foods": [Array], "lat": 37.2429406, "lnt": 127.0677065, "mealTime": "Breakfast", "member": [Object], "writeDate": "2023-05-05"}], "diaryExist": [true, false, false, false]}
