@@ -1,23 +1,27 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import { StyleSheet,View,Text,Image,ScrollView } from "react-native";
 import { useSelector } from "react-redux";
+import RNFetchBlob from 'rn-fetch-blob';
 
 function DietInfo({diet}) {
 //{"diaries": [{"diaryId": 1, "diaryImage": [Object], "foods": [Array], "lat": 37.2429406, "lnt": 127.0677065, "mealTime": "Breakfast", "member": [Object], "writeDate": "2023-05-05"}], "diaryExist": [true, false, false, false]}
 //음식 여러개일 때 확인해야 1개일 때 아닐 때 조건부로      
 const address = useSelector((state) => state.user.address);
 const token=useSelector(state => state.user.accessToken);
+const [foodImage, setFoodImage] = useState(false);
+
 useEffect(()=>{
   //diet parse stringify 제거한 뒤에 테스트
-  console.log(diet);
+  console.log("diet 확인",diet);
 
-  // fetch(address+"/diary/image/read?fileUrl="+diets.fileUrl, {  
+  // fetch(address+"/diary/image/read?fileUrl="+diet.fileUrl, {  
   //   method: "GET",
   //   headers : {
   //     Authorization: "Bearer "+token,
   //     "content-type":"image/jpeg"
   //     }
   //         }).then(function (response) {
+  //           console.log("응답",response);
   //           if (response.ok) {
   //               console.log("get 성공");
   //               return response.blob(); 
@@ -25,29 +29,29 @@ useEffect(()=>{
   //               alert('네트워크 오류');
   //           }
   //       })
-  //       .then(function (blob) {
-  //         return new Promise((resolve) => {
-  //           var tempBlob = new Blob([blob], {
-  //             type: "text/vtt; charset=utf-8"
-  //           });
-        
-  //           const fileReaderInstance = new FileReader();
-  //           fileReaderInstance.readAsDataURL(tempBlob);
-  //           fileReaderInstance.onload = () => {
-  //             base64 = fileReaderInstance.result;
-  //             vtt_data = base64;
-        
-  //             let strArr = Object.values(diets);
-  //             strArr.push(vtt_data)
-  //             newDiet[i] = strArr;
-        
-  //             resolve(newDiet);
-  //           }
-  //         });
+  //       .then(blob => {
+  //         const reader = new FileReader();
+  //         reader.onloadend = () => {
+  //           const base64data = reader.result;
+  //           setFoodImage(base64data);
+  //         };
+  //         reader.readAsDataURL(blob);
   //       })
-  //       .then(newDiet => {
-  //         setDiet(newDiet);
-  //       }) 
+        
+        RNFetchBlob
+        .config({
+          fileCache: false,
+        })
+        .fetch('GET', address+"/diary/image/read?fileUrl="+diet.fileUrl, { 
+          Authorization: "Bearer " + token,
+          "content-type":"image/jpeg"
+        })
+        .then((res) => {
+          let base64Str = res.base64();
+          setFoodImage(`data:image/jpeg;base64,${base64Str}`);
+        })
+        .catch((error) => console.error(error));
+  
   },[]);
   
   return (
@@ -56,6 +60,7 @@ useEffect(()=>{
   <ScrollView>
   <View style={styles.card}>
     <View style={styles.infoContainer}>
+    {foodImage && <Image style={{ width: 200, height: 200 }} source={{ uri: foodImage }} />}
               <Text style={styles.title}>
                 {/* {JSON.parse(diet)} */}결과
               </Text>

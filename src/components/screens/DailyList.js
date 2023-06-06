@@ -78,16 +78,20 @@ function DailyList({navigation, route}) {
           //   } else {
           //       console.log('오류');
           //   }
-},[list,isFocused])//"2023-00-00" route.params.date 글씨 크기 키우고 베이지, 회색
+},[list,isFocused])//"2023-00-00" route.params.date 전체적 흐름체크, 빌드 체크, 음식 정보 지우기, 정보 css 모달 css click false 이미지 띄우기
  
  return (
     <View style={styles.container}>
      <TouchableOpacity style={list[0] ? styles.diet : styles.notExist}
       onPress={()=>{
-        let inputDiet=false;
+        let inputDiet;
         if(diet[0]){
           inputDiet=JSON.stringify(diet[0])
           }
+        else{
+          inputDiet=false;
+        }
+        console.log("click",inputDiet);
         navigation.navigate("FoodAnalysis",{"diet":inputDiet, "date":route.params.date, "mealTime":"아침"});
       }}> 
       {/* Error: Objects are not valid as a React child (found: object with keys {name, calories, weight, tan, dan, ji, na}). If you meant to render a collection of children, use an array instead. */}
@@ -96,9 +100,12 @@ function DailyList({navigation, route}) {
 
      <TouchableOpacity style={list[1] ? styles.diet : styles.notExist}
       onPress={()=>{
-        let inputDiet=false;
+        let inputDiet;
         if(diet[1]){
           inputDiet=JSON.stringify(diet[1])
+          }
+          else{
+            inputDiet=false;
           }
         navigation.navigate("FoodAnalysis",{"diet":inputDiet, "date":route.params.date,"mealTime":"점심"});
       }}> 
@@ -107,9 +114,12 @@ function DailyList({navigation, route}) {
 
      <TouchableOpacity style={list[2] ? styles.diet : styles.notExist}
       onPress={()=>{
-        let inputDiet=false;
+        let inputDiet;
         if(diet[2]){
           inputDiet=JSON.stringify(diet[2])
+          }
+          else{
+            inputDiet=false;
           }
         navigation.navigate("FoodAnalysis",{"diet":inputDiet, "date":route.params.date, "mealTime":"저녁"});
       }}> 
@@ -118,9 +128,12 @@ function DailyList({navigation, route}) {
 
      <TouchableOpacity style={list[3] ? styles.diet : styles.notExist}
       onPress={()=>{
-        let inputDiet=false;
+        let inputDiet;
         if(diet[3]){
           inputDiet=JSON.stringify(diet[3])
+          }
+          else{
+            inputDiet=false;
           }
         navigation.navigate("FoodAnalysis",{"diet":inputDiet, "date":route.params.date, "mealTime":"간식"});
       }}> 

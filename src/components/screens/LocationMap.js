@@ -1,5 +1,5 @@
 import React, {useState, useEffect,useRef} from 'react';
-import {Button,TextInput,View,StyleSheet,Platform,PermissionsAndroid}from 'react-native';
+import {Button,TextInput,View,StyleSheet,Platform,PermissionsAndroid,Text}from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { windowHeight,windowWidth } from '../../util/WH';
 import Config from 'react-native-config';
@@ -7,6 +7,7 @@ import InfoModal from './InfoModal';
 import NaverMapView, {Marker} from "react-native-nmap";
 import {useSelector} from "react-redux";
 import axios from 'axios';
+import SearchModal from './searchModal';
 
 export default function LocationMap({navigation}){
   const address = useSelector((state) => state.user.address);
@@ -20,7 +21,7 @@ export default function LocationMap({navigation}){
   const[searchResults,setSearchResults]=useState(undefined);
   const[position,setPosition]=useState("");
   const[region,setRegion]=useState(undefined);
-  const overlayRef = useRef(null);
+  const[searchModal,setSearchModal]=useState(false);
 
   const search= async()=>{
     try{
@@ -44,7 +45,7 @@ export default function LocationMap({navigation}){
     console.log("결과",Object.entries(data.items[0]));//[["title", "<b>파리바게뜨</b> 용인서천마을점"], ["link", ""], ["category", "카페,디저트>베이커리"], ["description", ""], ["telephone", ""], ["address", " 
     // 경기도 용인시 기흥구 서천동 813"], ["roadAddress", "경기도 용인시 기흥구 서천로 121"], ["mapx", "317925"], ["mapy", "515459"]]
     if(position!=""){
-    setSearchResults(data.items[0]);
+    setSearchResults(Object.entries(data.items[0]));
     console.log("setresult")
   }
   })    
@@ -65,7 +66,7 @@ export default function LocationMap({navigation}){
     const data = await response.json();
     if (data.status === 'OK') {
       console.log(data);
-      const addressArr = data.results[0].formatted_address.split(' ',);
+      const addressArr = data.results[1].formatted_address.split(' ',);
       const area=' '+addressArr[2]+' '+addressArr[3];
       if (area) {
         return area;
@@ -141,10 +142,6 @@ async function requestPermissions() {
     });
     }
   })
-  if (overlayRef.current) {
-    // 정보창 보이기
-    overlayRef.current.show();
-  }
   }, [location,info,position]);
 
 
@@ -242,24 +239,25 @@ async function requestPermissions() {
           info={JSON.stringify(infoList[index])}
           />
           )) )}
+
           {searchResults && (
-          <>
           <Marker
             coordinate={{ latitude: position[0], longitude: position[1]}}
             caption={{ text: searchResults.title }} //position을 주소로부터 가져오고, 검색어에 현재 지역을 붙인다.
-            pinColor="red"
             onClick={() => {
-            if (overlayRef.current) {
-              // 정보창 보이기
-              overlayRef.current.show();
-            }
+            setSearchModal(true);
           }}
+          pinColor="red"
           />
-        <View style={styles.infoWindow} ref={overlayRef}>
-        <Text>정보창</Text>
-        </View>
-       </>
-       )}  
+       )}
+       {
+      <SearchModal
+      visible={searchModal} 
+      onClose={() => setSearchModal(false)}
+      info={JSON.stringify(searchResults)}
+       />
+       }  
+
   </NaverMapView>)}
 </View>
   );
