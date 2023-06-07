@@ -12,7 +12,7 @@ const [foodImage, setFoodImage] = useState(false);
 
 useEffect(()=>{
   //diet parse stringify 제거한 뒤에 테스트
-  console.log("diet 확인",diet);
+  let dietObj=JSON.parse(diet);
 
   // fetch(address+"/diary/image/read?fileUrl="+diet.fileUrl, {  
   //   method: "GET",
@@ -37,12 +37,13 @@ useEffect(()=>{
   //         };
   //         reader.readAsDataURL(blob);
   //       })
-        
+        if(dietObj.fileUrl){
+        console.log(dietObj.fileUrl);
         RNFetchBlob
         .config({
           fileCache: false,
         })
-        .fetch('GET', address+"/diary/image/read?fileUrl="+diet.fileUrl, { 
+        .fetch('GET', address+"/diary/image/read?fileUrl="+dietObj.fileUrl, { 
           Authorization: "Bearer " + token,
           "content-type":"image/jpeg"
         })
@@ -51,7 +52,7 @@ useEffect(()=>{
           setFoodImage(`data:image/jpeg;base64,${base64Str}`);
         })
         .catch((error) => console.error(error));
-  
+      }
   },[]);
   
   return (

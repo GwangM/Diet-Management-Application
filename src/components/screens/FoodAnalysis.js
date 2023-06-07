@@ -98,7 +98,9 @@ export default function FoodAnalysis({navigation, route}) {
                              }
                           }).then(function(){
                           setModalVisible(false);
-                          navigation.navigate("DailyList",{"date": route.params.date}); //음식 정보를 넣으면 DailyList로 돌아간다.
+                          let present=route.params.date;
+                          console.log(present,"확인용");
+                          navigation.navigate("CalendarView"); //
                           })
                     })
           .catch((err) => {

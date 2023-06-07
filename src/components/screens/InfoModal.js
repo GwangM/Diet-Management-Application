@@ -25,12 +25,12 @@ export default function InfoModal({visible, onClose, location, info}) {
       alignItems: "center",
     },
     whiteBox: {
-      width: 300,
+      width: '100%',
       backgroundColor: "white",
       borderRadius: 4,
       elevation: 2,
       justifyContent: "center",
-    alignItems: "center",
+      alignItems: "center",
     },
     actionButton: {
       padding: 16,

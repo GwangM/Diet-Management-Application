@@ -7,7 +7,7 @@ import InfoModal from './InfoModal';
 import NaverMapView, {Marker} from "react-native-nmap";
 import {useSelector} from "react-redux";
 import axios from 'axios';
-import SearchModal from './searchModal';
+import SearchModal from './SearchModal';
 
 export default function LocationMap({navigation}){
   const address = useSelector((state) => state.user.address);
@@ -36,21 +36,18 @@ export default function LocationMap({navigation}){
     console.log(data);
     getLatLngFromAddress(data.items[0].address)
     .then(({ lat, lng }) => {
-      if(position===""){
       setPosition([lat,lng]);
-    }
+      console.log("setposit");
       return [lat,lng];
   })
   .then(pos =>{
     console.log("결과",Object.entries(data.items[0]));//[["title", "<b>파리바게뜨</b> 용인서천마을점"], ["link", ""], ["category", "카페,디저트>베이커리"], ["description", ""], ["telephone", ""], ["address", " 
     // 경기도 용인시 기흥구 서천동 813"], ["roadAddress", "경기도 용인시 기흥구 서천로 121"], ["mapx", "317925"], ["mapy", "515459"]]
-    if(position!=""){
+    if(true){
     setSearchResults(Object.entries(data.items[0]));
     console.log("setresult")
   }
   })    
-      
-     
     } catch (error) {
       console.error(error);
     }
@@ -142,7 +139,7 @@ async function requestPermissions() {
     });
     }
   })
-  }, [location,info,position]);
+  }, [location,info,position,searchResults]);
 
 
   function findIndex(arr, target) {
@@ -252,6 +249,7 @@ async function requestPermissions() {
        )}
        {
       <SearchModal
+      animationType="slide"
       visible={searchModal} 
       onClose={() => setSearchModal(false)}
       info={JSON.stringify(searchResults)}

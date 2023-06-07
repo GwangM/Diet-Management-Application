@@ -20,22 +20,21 @@ function DailyList({navigation, route}) {
       }
           }).then(response => response.json()).then(response => {
             if(response){
-              console.log(response);//{"diaries": [{"diaryId": 1, "diaryImage": [Object], "foods": [Array], "lat": 37.2429406, "lnt": 127.0677065, "mealTime": "Breakfast", "member": [Object], "writeDate": "2023-05-05"}], "diaryExist": [true, false, false, false]}
+             //{"diaries": [{"diaryId": 1, "diaryImage": [Object], "foods": [Array], "lat": 37.2429406, "lnt": 127.0677065, "mealTime": "Breakfast", "member": [Object], "writeDate": "2023-05-05"}], "diaryExist": [true, false, false, false]}
               //{"diaries": [], "diaryExist": [false, false, false, false]}
               
               if((list.every((value, idx) => value === response.diaryExist[idx]))==false){
                 setList(response.diaryExist);}
               const dietList=response.diaries;
-              console.log(list[0])
-              console.log(dietList)
               for (let i = 0; i < 4; i++) {
-                if (list[i] && diet[i]==false){ //순회하며 식단 저장
+                if (list[i] && (diet[i]==false)){ //순회하며 식단 저장
                   if(i==0){
                     dietList.forEach(function(diets){ //mealTime이 일치하면 setDiet로 index가 일치하게 할당한다.
                         if (diets.mealTime=="Breakfast"){
                           var newDiet = [...diet];
                           newDiet[i]=diets;
                           setDiet(newDiet);
+                          console.log("breakfastSet");
                         }
                   })
                 }
@@ -78,9 +77,10 @@ function DailyList({navigation, route}) {
           //   } else {
           //       console.log('오류');
           //   }
-},[list,isFocused])//"2023-00-00" route.params.date 전체적 흐름체크, 빌드 체크, 음식 정보 지우기, 정보 css 모달 css click false 이미지 띄우기
- 
- return (
+},[list,diet])
+//"2023-00-00" route.params.date 전체적 흐름체크, 빌드 체크, 음식 정보 지우기, 정보 css 모달 css 탈퇴
+//숫자입력하면 결과 산출 
+return (
     <View style={styles.container}>
      <TouchableOpacity style={list[0] ? styles.diet : styles.notExist}
       onPress={()=>{
@@ -91,7 +91,6 @@ function DailyList({navigation, route}) {
         else{
           inputDiet=false;
         }
-        console.log("click",inputDiet);
         navigation.navigate("FoodAnalysis",{"diet":inputDiet, "date":route.params.date, "mealTime":"아침"});
       }}> 
       {/* Error: Objects are not valid as a React child (found: object with keys {name, calories, weight, tan, dan, ji, na}). If you meant to render a collection of children, use an array instead. */}

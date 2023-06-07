@@ -25,7 +25,7 @@ export default function SearchModal({visible, onClose, info}) {
       alignItems: "center",
     },
     whiteBox: {
-      width: 300,
+      width: '100%',
       backgroundColor: "white",
       borderRadius: 4,
       elevation: 2,
