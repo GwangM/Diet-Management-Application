@@ -78,7 +78,7 @@ function DailyList({navigation, route}) {
           //       console.log('오류');
           //   }
 },[list,diet])
-//"2023-00-00" route.params.date 전체적 흐름체크, 빌드 체크, 음식 정보 지우기, 정보 css 모달 css 탈퇴
+//"2023-00-00" route.params.date 전체적 흐름체크, 빌드 체크, 정보 css 모달 css
 //숫자입력하면 결과 산출 
 return (
     <View style={styles.container}>

@@ -1,7 +1,8 @@
 import React,{useEffect,useState} from "react";
-import { StyleSheet,View,Text,Image,ScrollView } from "react-native";
+import { StyleSheet,View,Text,Image,ScrollView,Button } from "react-native";
 import { useSelector } from "react-redux";
 import RNFetchBlob from 'rn-fetch-blob';
+import { useNavigation } from '@react-navigation/native';
 
 function DietInfo({diet}) {
 //{"diaries": [{"diaryId": 1, "diaryImage": [Object], "foods": [Array], "lat": 37.2429406, "lnt": 127.0677065, "mealTime": "Breakfast", "member": [Object], "writeDate": "2023-05-05"}], "diaryExist": [true, false, false, false]}
@@ -9,34 +10,13 @@ function DietInfo({diet}) {
 const address = useSelector((state) => state.user.address);
 const token=useSelector(state => state.user.accessToken);
 const [foodImage, setFoodImage] = useState(false);
-
+const [id,setId]=useState(false);
+const navigation=useNavigation();
 useEffect(()=>{
   //diet parse stringify 제거한 뒤에 테스트
   let dietObj=JSON.parse(diet);
-
-  // fetch(address+"/diary/image/read?fileUrl="+diet.fileUrl, {  
-  //   method: "GET",
-  //   headers : {
-  //     Authorization: "Bearer "+token,
-  //     "content-type":"image/jpeg"
-  //     }
-  //         }).then(function (response) {
-  //           console.log("응답",response);
-  //           if (response.ok) {
-  //               console.log("get 성공");
-  //               return response.blob(); 
-  //           } else {
-  //               alert('네트워크 오류');
-  //           }
-  //       })
-  //       .then(blob => {
-  //         const reader = new FileReader();
-  //         reader.onloadend = () => {
-  //           const base64data = reader.result;
-  //           setFoodImage(base64data);
-  //         };
-  //         reader.readAsDataURL(blob);
-  //       })
+  setId(dietObj.diaryId);
+  console.log(id,"id확인");
         if(dietObj.fileUrl){
         console.log(dietObj.fileUrl);
         RNFetchBlob
@@ -53,7 +33,7 @@ useEffect(()=>{
         })
         .catch((error) => console.error(error));
       }
-  },[]);
+  },[id]);
   
   return (
      
@@ -77,6 +57,25 @@ useEffect(()=>{
             </View>
           ))} <Image source={{ uri: `data:image/png;base64,${base64Image}` }} style={styles.image} /> */}
   {/* [5]url [6]음식 객체들 배열 [7]이미지*/}
+  <Button title="정보 지우기"
+      onPress={()=>{
+        fetch(address+"/diary/delete?diaryId="+id, {  
+          method: "POST",
+          headers : {
+            Authorization: "Bearer "+token
+            }
+                }).then(function(){
+            navigation.navigate("CalendarView");
+                })
+        
+      }}
+      />
+      <Button title="화면 전환"
+      onPress={()=>{
+            navigation.navigate("CalendarView");
+        
+      }}
+      />
 </ScrollView>
 </View>
   );
