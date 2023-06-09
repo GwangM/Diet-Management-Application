@@ -32,20 +32,16 @@ export default function LocationMap({navigation}){
           'X-Naver-Client-Secret': Config.NAVER_CLIENT_SECRET
         },
       });
-      console.log(searchTerm+region,"검색");
-    console.log(data);
     getLatLngFromAddress(data.items[0].address)
     .then(({ lat, lng }) => {
       setPosition([lat,lng]);
-      console.log("setposit");
       return [lat,lng];
   })
   .then(pos =>{
-    console.log("결과",Object.entries(data.items[0]));//[["title", "<b>파리바게뜨</b> 용인서천마을점"], ["link", ""], ["category", "카페,디저트>베이커리"], ["description", ""], ["telephone", ""], ["address", " 
+    //[["title", "<b>파리바게뜨</b> 용인서천마을점"], ["link", ""], ["category", "카페,디저트>베이커리"], ["description", ""], ["telephone", ""], ["address", " 
     // 경기도 용인시 기흥구 서천동 813"], ["roadAddress", "경기도 용인시 기흥구 서천로 121"], ["mapx", "317925"], ["mapy", "515459"]]
     if(true){
-    setSearchResults(Object.entries(data.items[0]));
-    console.log("setresult")
+    setSearchResults(JSON.stringify(data.items[0]));
   }
   })    
     } catch (error) {
@@ -62,7 +58,6 @@ export default function LocationMap({navigation}){
     );
     const data = await response.json();
     if (data.status === 'OK') {
-      console.log(data);
       const addressArr = data.results[1].formatted_address.split(' ',);
       const area=' '+addressArr[2]+' '+addressArr[3];
       if (area) {
@@ -240,7 +235,7 @@ async function requestPermissions() {
           {searchResults && (
           <Marker
             coordinate={{ latitude: position[0], longitude: position[1]}}
-            caption={{ text: searchResults.title }} //position을 주소로부터 가져오고, 검색어에 현재 지역을 붙인다.
+            caption={{ text: searchTerm }} //position을 주소로부터 가져오고, 검색어에 현재 지역을 붙인다.
             onClick={() => {
             setSearchModal(true);
           }}
@@ -252,7 +247,7 @@ async function requestPermissions() {
       animationType="slide"
       visible={searchModal} 
       onClose={() => setSearchModal(false)}
-      info={JSON.stringify(searchResults)}
+      info={searchResults}
        />
        }  
 

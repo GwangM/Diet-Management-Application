@@ -11,12 +11,14 @@ const address = useSelector((state) => state.user.address);
 const token=useSelector(state => state.user.accessToken);
 const [foodImage, setFoodImage] = useState(false);
 const [id,setId]=useState(false);
+const [foods,setFoods]=useState(false);
 const navigation=useNavigation();
 useEffect(()=>{
   //diet parse stringify 제거한 뒤에 테스트
   let dietObj=JSON.parse(diet);
   setId(dietObj.diaryId);
-  console.log(id,"id확인");
+  setFoods(dietObj.foods);
+  console.log(dietObj,"id확인");
         if(dietObj.fileUrl){
         console.log(dietObj.fileUrl);
         RNFetchBlob
@@ -41,21 +43,23 @@ useEffect(()=>{
   <ScrollView>
   <View style={styles.card}>
     <View style={styles.infoContainer}>
-    {foodImage && <Image style={{ width: 200, height: 200 }} source={{ uri: foodImage }} />}
+    {foodImage && <Image style={{ width: 200, height: 200, justifyContent: "center",}} source={{ uri: foodImage }} />}
+       {foods && foods.map((food, idx) => (
+            <View key={idx}>
               <Text style={styles.title}>
-                {/* {JSON.parse(diet)} */}결과
+                {"\n"} 음식 이름 : {food.name+"\n"}
+                1회제공량 : {food.weight+"(g/ml)\n"}
+                100(g/ml)당 열량 : {food.calories+"kcal\n"}
+                100(g/ml)당 탄수화물 : {food.tan+"g\n"}
+                100(g/ml)당 단백질 : {food.dan+"g\n"}
+                100(g/ml)당 지방 : {food.ji+"g\n"}
+                100(g/ml)당 나트륨 : {food.na+"mg"}
               </Text>
-              </View>
-              {/* <Text style={styles.info}>{food.calories}</Text> */}
             </View>
-          {/* {diet[6].map((food, idx) => (
-            <View style={styles.card} key={idx}>
-              <Text style={styles.title}>
-                {food.name}
-              </Text>
-              <Text style={styles.info}>{food.calories}</Text>
-            </View>
-          ))} <Image source={{ uri: `data:image/png;base64,${base64Image}` }} style={styles.image} /> */}
+          ))} 
+      </View>        
+    </View>
+         
   {/* [5]url [6]음식 객체들 배열 [7]이미지*/}
   <Button title="정보 지우기"
       onPress={()=>{
@@ -67,12 +71,6 @@ useEffect(()=>{
                 }).then(function(){
             navigation.navigate("CalendarView");
                 })
-        
-      }}
-      />
-      <Button title="화면 전환"
-      onPress={()=>{
-            navigation.navigate("CalendarView");
         
       }}
       />
@@ -125,6 +123,7 @@ const styles = StyleSheet.create({
       overflow: 'hidden',
       marginBottom: 10,
       elevation: 2,
+      
     },
     image: {
       width: '100%',
@@ -132,6 +131,7 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
       padding: 20,
+      alignItems: "center",
     },
     title: {
       fontSize: 20,

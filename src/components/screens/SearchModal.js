@@ -1,8 +1,37 @@
-import React from "react";
-import { StyleSheet, Modal, View, Pressable, Text } from "react-native";
+import React,{useEffect,useState} from "react";
+import { StyleSheet, Modal, View, Pressable, Text, Linking } from "react-native";
+
 
 export default function SearchModal({visible, onClose, info}) {
-    return (
+  const [str, setStr] = useState(false);
+  const [infoObj,setInfoObj]=useState(false);
+  const [pageLink, setPageLink]=useState(false);
+
+  let Hyperlink = () => {
+      if(pageLink!=false && pageLink!=""){
+        onClose();
+        Linking.openURL(pageLink);
+    }
+    }
+
+  useEffect(()=>{
+    if(info){
+      console.log("info",typeof(info),info);
+      
+      setStr(info.replace(/\\/g, "").replace(/<[^>]*>/g, "").replace(/>/g, ""));
+      if(infoObj===false || infoObj.title != JSON.parse(str).title){
+      setInfoObj(JSON.parse(str));
+    }
+    if(infoObj){
+    setPageLink(infoObj.link);
+  } 
+      console.log("replace",infoObj,typeof(infoObj));
+      
+  }
+    
+  },[info,str,infoObj]);
+
+  return (
     <View style={styles.container}>
       <Modal
         visible={visible}
@@ -10,7 +39,16 @@ export default function SearchModal({visible, onClose, info}) {
         animationType="fade"
         onRequestClose={onClose}>
           <View style={styles.whiteBox}>
-            <Text style={styles.actionText}>{info}</Text>
+            {infoObj&&
+            <Text onPress={Hyperlink}>
+            {infoObj.title+"\n"}
+            {infoObj.address+"\n"}
+            {infoObj.roadAddress+"\n"}
+            홈페이지 : {infoObj.link+"\n"}
+            전화번호 : {infoObj.telephone+"\n"}
+            설명 : {infoObj.description+"\n"}
+            </Text>
+            }
           </View>
       </Modal></View>
     );
