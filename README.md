@@ -13,27 +13,27 @@ Development of diet management application using machine learning API(영문)
   
 ## Results  
 로그인 화면  
-![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/85e5e963-87ce-452a-a911-c635d36e6641)
+![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/85e5e963-87ce-452a-a911-c635d36e6641)  
 달력 화면  
-![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/dcddf5ef-343c-4fbe-b897-f2cc847f447f)
-일별 관리 화면
-![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/d7a63c25-7922-43f1-ad38-e433ba4ab4ab)
-지도 화면 
-![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/52d86152-a83a-4f9b-992a-2b38f577fb47)
+![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/dcddf5ef-343c-4fbe-b897-f2cc847f447f)  
+일별 관리 화면  
+![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/c2f98ee8-8992-42df-98ad-b0b90da881cf)  
+지도 화면  
+![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/52d86152-a83a-4f9b-992a-2b38f577fb47)  
 
-음식 분석 화면 
-![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/e10b932c-b3c5-47f7-988f-d5ff0ea67d33) 
-지역 검색 화면
-![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/7e9affe9-e3f5-44ab-8698-a3ed84f3d8cf)
+음식 분석 화면  
+![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/25133d7b-670c-43ba-98ba-514676d57a99)  
+지역 검색 화면  
+![image](https://github.com/GwangM/Diet-Management-Application/assets/89342880/07bf13be-b0f0-4472-a957-4a0aff198a84)
 
 ## Conclusion
   음식 인식 API를 활용하여 음식 정보 추출, 식단 정보 관리 기능을 제공하는 식단 관리 애플리케이션을 구현하였다. 또한 OAuth2.0을 활용하여 편리하게 사용자 정보를 입력하는 기능을 적용하였다. 그럼으로써 사용자가 식단 관리를 빠르고 편리하게 할 수 있도록 하였다. 또한 현 위치 근방에 대한 지도 기능을 추가하였다. 기존의 지도 기능이 없었던 식단 관리 애플리케이션에 관련 기능을 추가하였고, 이를 통해 지도 정보로부터 음식 정보를 얻을 수 있게 하였다. 이러한 기능으로 인해 사용자 편의성을 증진해줄 것으로 기대된다. 향후 연구로는 식단 관리 애플리케이션에 있어서 사용자 편의성을 향상시킬 수 있는 방안들을 구상하고, 이에 필요한 추가 기능들을 구체화하여 연구할 계획이다.
   
 ## References
-[1] 음식 인식 API : https://console.kakaoi.io/docs/posts/aiservice-vision/food-recognition/2022-06-27-aiservice-food-recognition_overview/aiservice-food-recognition_overview#음식-인식
-[2] KHIN CHAN MYAE AUNG "Today’s MENU: 개인 맞춤형 건강 식단관리 추천 애플리케이션" 국내석사학위논문 부경대학교 2022.2 (2022).
-[3] 권오득, 이현우, 김영아, 박두순 "스마트폰의 GPS를 이용한 음식점 추천 시스템" 한국정보처리학회 학술대회논문집 2012.4 (2012): 1330-1332.
-[4] 김미정,김은경,김은하,최유진, 이성철. "지도 API와 데이터베이스를 활용한 반려동물 관리 애플리케이션." 한국정보처리학회 학술대회논문집 29.2 (2022): 676-678.
+[1] 음식 인식 API : https://console.kakaoi.io/docs/posts/aiservice-vision/food-recognition/2022-06-27-aiservice-food-recognition_overview/aiservice-food-recognition_overview#음식-인식  
+[2] KHIN CHAN MYAE AUNG "Today’s MENU: 개인 맞춤형 건강 식단관리 추천 애플리케이션" 국내석사학위논문 부경대학교 2022.2 (2022).  
+[3] 권오득, 이현우, 김영아, 박두순 "스마트폰의 GPS를 이용한 음식점 추천 시스템" 한국정보처리학회 학술대회논문집 2012.4 (2012): 1330-1332.  
+[4] 김미정,김은경,김은하,최유진, 이성철. "지도 API와 데이터베이스를 활용한 반려동물 관리 애플리케이션." 한국정보처리학회 학술대회논문집 29.2 (2022): 676-678.  
 [5] https://developers.google.com/identity/protocols/oauth2?hl=ko
 
 ## Reports
