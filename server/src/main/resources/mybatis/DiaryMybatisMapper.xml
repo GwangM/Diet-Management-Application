@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fDiary.server.diray.reppository.DiaryMybatisMapper">
+
+    <select id="selectListNearLocation" resultType="com.fDiary.server.diray.model.entity.Diary">
+        SELECT *,
+        (6371*acos(cos(radians(#{lat}))*cos(radians(lat))*cos(radians(lnt)
+        -radians(#{lnt}))+sin(radians(#{lat}))*sin(radians(lat))))
+        AS distance
+        FROM Diary
+        HAVING distance <![CDATA[<=]]> 3
+        ORDER BY distance
+        LIMIT 0,10
+    </select>
+    <select id="selectThisWeekDiaries" resultType="com.fDiary.server.diray.model.entity.Diary">
+        SELECT *
+        FROM Diary
+        WHERE writeDate between #{monday} and #{today}
+            and memberId = #{memberId}
+        ORDER BY writeDate
+    </select>
+
+
+</mapper>
